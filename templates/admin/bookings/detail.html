@@ -1,0 +1,95 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Booking Detail - {{ booking.service.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Thông tin đơn hàng</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Khách hàng</th>
+                        <td>
+                            <a href="{% url 'accounts:admin_user_detail' booking.customer.pk %}">
+                                {{ booking.customer.get_full_name }}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <td>
+                            <a href="{% url 'services:admin_service_detail' booking.service.pk %}">
+                                {{ booking.service.name }}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Ngày đặt</th>
+                        <td>{{ booking.booking_date|date:"M d, Y H:i" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Trạng thái</th>
+                        <td>
+                            <span class="badge bg-{{ booking.get_status_class }}">
+                                {{ booking.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Điểm thưởng</th>
+                        <td>
+                            {% if booking.points_awarded %}
+                            <i class="bi bi-check-circle-fill text-success"></i> Yes
+                            {% else %}
+                            <i class="bi bi-x-circle-fill text-secondary"></i> No
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Ghi chú của khách hàng</h5>
+            </div>
+            <div class="card-body">
+                {% if booking.notes %}
+                {{ booking.notes|linebreaks }}
+                {% else %}
+                <p class="text-muted">Không có ghi chú nào được cung cấp</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Hành động</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'bookings:admin_booking_update' booking.pk %}" 
+                       class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Sửa đơn hàng
+                    </a>
+                    {% if booking.status == 'completed' and not booking.points_awarded %}
+                    <form method="post" action="{% url 'accounts:manage_points' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="booking_id" value="{{ booking.pk }}">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-star"></i> Điểm thưởng
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

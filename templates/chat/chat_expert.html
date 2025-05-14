@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chat với chuyên viên{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2>Chat với chuyên viên Điện Tử XANH</h2>
+        <p>Hỏi bất kỳ câu hỏi nào, chúng tôi sẽ hỗ trợ ngay!</p>
+    </div>
+
+    <div class="chat-body" id="chat-body">
+        <div class="message bot-message">
+            <span>Xin chào! Chọn một câu hỏi dưới đây hoặc nhập câu hỏi của bạn:</span>
+        </div>
+    </div>
+
+    <div class="chat-suggestions">
+        <button class="suggestion-btn" onclick="sendSuggestion('Làm thế nào để đặt hàng?')">Làm thế nào để đặt hàng?</button>
+        <button class="suggestion-btn" onclick="sendSuggestion('Chính sách bảo hành như thế nào?')">Chính sách bảo hành như thế nào?</button>
+        <button class="suggestion-btn" onclick="sendSuggestion('Tôi có thể đổi trả sản phẩm không?')">Tôi có thể đổi trả sản phẩm không?</button>
+        <button class="suggestion-btn" onclick="sendSuggestion('Liên hệ hỗ trợ qua đâu?')">Liên hệ hỗ trợ qua đâu?</button>
+    </div>
+
+    <div class="chat-footer">
+        <input type="text" id="user-input" placeholder="Nhập tin nhắn..." onkeypress="if(event.key === 'Enter') sendUserMessage()">
+        <button onclick="sendUserMessage()">Gửi</button>
+    </div>
+
+    <div class="chat-platforms">
+        <p>Hoặc liên hệ trực tiếp qua:</p>
+        <div class="chat-icons">
+            <a href="https://m.me/549411884921223" target="_blank">
+                <img src="{% static 'images/facebook-icon.jpg' %}" alt="Facebook">
+                <span>Facebook</span>
+            </a>
+            <a href="https://www.instagram.com/direct/t/113131340078911" target="_blank">
+                <img src="{% static 'images/instagram-icon.jpg' %}" alt="Instagram">
+                <span>Instagram</span>
+            </a>
+            <a href="https://zalo.me/0702664640" target="_blank">
+                <img src="{% static 'images/zalo-icon.png' %}" alt="Zalo">
+                <span>Zalo</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    .chat-header {
+        background: #B78E80;
+        color: white;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .chat-body {
+        height: 400px;
+        overflow-y: auto;
+        padding: 20px;
+        background: #f1f0f0;
+    }
+
+    .message {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 15px;
+        max-width: 70%;
+        line-height: 1.4;
+    }
+
+    .bot-message {
+        background: #e6e6e6;
+        margin-right: auto;
+    }
+
+    .user-message {
+        background: #B78E80;
+        color: white;
+        margin-left: auto;
+    }
+
+    .chat-suggestions {
+        padding: 10px 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        background: #fff;
+        border-top: 1px solid #ddd;
+    }
+
+    .suggestion-btn {
+        padding: 8px 15px;
+        background: #f0f0f0;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease;
+        animation: suggestion-pop 0.3s ease;
+    }
+
+    .suggestion-btn:hover {
+        background: #B78E80;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    @keyframes suggestion-pop {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .chat-footer {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        background: #fff;
+    }
+
+    .chat-footer input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        margin-right: 10px;
+    }
+
+    .chat-footer button {
+        padding: 10px 20px;
+        background: #B78E80;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+    }
+
+    .chat-footer button:hover {
+        background: #9a766a;
+    }
+
+    .chat-platforms {
+        text-align: center;
+        padding: 20px;
+        background: #f9f9f9;
+        border-top: 1px solid #ddd;
+    }
+
+    .chat-icons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    .chat-icons a {
+        text-decoration: none;
+        color: #333;
+        text-align: center;
+    }
+
+    .chat-icons img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: transform 0.2s ease;
+    }
+
+    .chat-icons img:hover {
+        transform: scale(1.1);
+    }
+
+    .chat-icons span {
+        display: block;
+        margin-top: 5px;
+    }
+</style>
+
+<script>
+    
+    const responses = {
+        "đặt hàng": {
+            keywords: ["đặt", "hàng"],
+            suggestion: "Làm thế nào để đặt hàng?",
+            response: "Để đặt hàng, bạn vào trang 'Dịch vụ', chọn sản phẩm mong muốn, nhấp 'Đặt ngay' và điền thông tin. Sau đó, chúng tôi sẽ liên hệ xác nhận!"
+        },
+        "bảo hành": {
+            keywords: ["bảo", "hành"],
+            suggestion: "Chính sách bảo hành như thế nào?",
+            response: "Sản phẩm của chúng tôi có bảo hành từ 6-12 tháng tùy loại. Vui lòng mang sản phẩm đến cửa hàng hoặc liên hệ để được hỗ trợ."
+        },
+        "đổi trả": {
+            keywords: ["đổi", "trả"],
+            suggestion: "Tôi có thể đổi trả sản phẩm không?",
+            response: "Bạn có thể đổi trả trong vòng 7 ngày nếu sản phẩm còn nguyên vẹn và có lỗi từ nhà sản xuất. Liên hệ qua Zalo hoặc Facebook để được hướng dẫn."
+        },
+        "liên hệ": {
+            keywords: ["liên", "hệ"],
+            suggestion: "Liên hệ hỗ trợ qua đâu?",
+            response: "Bạn có thể liên hệ qua Facebook, Instagram, hoặc Zalo ở các biểu tượng bên dưới. Chúng tôi phản hồi trong vòng 24 giờ!"
+        },
+        "giao hàng": {
+            keywords: ["giao", "hàng"],
+            suggestion: "Sản phẩm có giao hàng không?",
+            response: "Chúng tôi hỗ trợ giao hàng toàn quốc. Phí giao hàng tùy thuộc vào khu vực, vui lòng liên hệ để biết chi tiết."
+        }
+    };
+
+   
+    let answeredQuestions = [];
+
+    function sendSuggestion(question) {
+        const chatBody = document.getElementById('chat-body');
+        
+       
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message user-message';
+        userMessage.innerHTML = `<span>${question}</span>`;
+        chatBody.appendChild(userMessage);
+
+       
+        let matchedKey = null;
+        for (const key in responses) {
+            if (responses[key].suggestion === question && !answeredQuestions.includes(key)) {
+                matchedKey = key;
+                break;
+            }
+        }
+
+       
+        let responseText = matchedKey ? responses[matchedKey].response : "Xin vui lòng nói đúng trọng tâm dịch vụ.";
+        if (matchedKey) {
+            answeredQuestions.push(matchedKey);
+        }
+
+     
+        setTimeout(() => {
+            const botMessage = document.createElement('div');
+            botMessage.className = 'message bot-message';
+            botMessage.innerHTML = `<span>${responseText}</span>`;
+            chatBody.appendChild(botMessage);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }, 500);
+    }
+
+    function sendUserMessage() {
+        const input = document.getElementById('user-input');
+        const message = input.value.trim().toLowerCase();
+        
+        if (!message) return;
+
+        const chatBody = document.getElementById('chat-body');
+        
+       
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message user-message';
+        userMessage.innerHTML = `<span>${message}</span>`;
+        chatBody.appendChild(userMessage);
+        input.value = '';
+
+      
+        let responseText = "Xin vui lòng nói đúng trọng tâm dịch vụ.";
+        let matchedKey = null;
+
+       
+        for (const key in responses) {
+            const { keywords } = responses[key];
+            if (keywords.every(kw => message.includes(kw)) && !answeredQuestions.includes(key)) {
+                matchedKey = key;
+                responseText = responses[key].response;
+                break;
+            }
+        }
+
+        
+        if (matchedKey) {
+            answeredQuestions.push(matchedKey);
+        }
+
+       
+        if (answeredQuestions.length >= Object.keys(responses).length && !matchedKey) {
+            responseText = "Nhân viên tư vấn hiện đang offline. Vui lòng liên hệ qua Facebook, Instagram hoặc Zalo.";
+        }
+
+      
+        setTimeout(() => {
+            const botMessage = document.createElement('div');
+            botMessage.className = 'message bot-message';
+            botMessage.innerHTML = `<span>${responseText}</span>`;
+            chatBody.appendChild(botMessage);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }, 500);
+    }
+</script>
+{% endblock %}

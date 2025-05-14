@@ -1,0 +1,97 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Chi tiết sản phẩm - {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                {% if service.image %}
+                <img src="{{ service.image.url }}" alt="{{ service.name }}" class="img-fluid rounded mb-3">
+                {% else %}
+                <div class="bg-light rounded mb-3 p-5 text-muted">
+                    <i class="bi bi-image" style="font-size: 3rem;"></i>
+                    <p class="mt-2">Không có hình ảnh</p>
+                </div>
+                {% endif %}
+                
+                <h4>{{ service.name }}</h4>
+                <h5 class="text-primary">${{ service.price }}</h5>
+                <p class="text-muted">{{ service.duration_in_minutes }} phút</p>
+                
+                {% if service.is_featured %}
+                <span class="badge bg-warning text-dark">Featured</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Thao tác nhanh</h5>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'services:admin_service_update' service.pk %}" 
+                       class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Sửa sản phẩm
+                    </a>
+                    <a href="{% url 'services:admin_service_reviews' service.pk %}" 
+                       class="btn btn-info">
+                        <i class="bi bi-chat-square-text"></i> Xem đánh giá ({{ service.review_count }})
+                    </a>
+                    <a href="{% url 'services:admin_service_delete' service.pk %}" 
+                        class="btn btn-danger"
+                         >
+                         <i class="bi bi-trash"></i> Xóa sản phẩm
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Chi tiết sản phẩm</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6>Danh mục</h6>
+                    <p>
+                        {% if service.category %}
+                        <a href="{% url 'services:admin_service_category_update' service.category.pk %}">
+                            {{ service.category.name }}
+                        </a>
+                        {% else %}
+                        <span class="text-muted">Không có danh mục nào được chỉ định</span>
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Mô tả</h6>
+                    <p>{{ service.description|linebreaks }}</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Đánh giá trung bình</h6>
+                        <div class="d-flex align-items-center">
+                            <span class="display-6 me-3">{{ service.average_rating|default:"-" }}</span>
+                            {% if service.average_rating %}
+                            <div class="text-warning">
+                                {{ service.get_rating_stars }}
+                                <small class="text-muted">({{ service.review_count }} reviews)</small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Đơn hàng</h6>
+                        <p>{{ service.booking_set.count }} tổng đơn hàng</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

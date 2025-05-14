@@ -1,0 +1,222 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Quản lý đơn hàng{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<style>
+    .card {
+        background: #fff;
+        margin-top: 25px;
+        padding: 2rem;
+        border-radius: 8px;
+        border: 25px solid #B78E80;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 110px;
+    }
+
+    .card-header h5 {
+        color: #B78E80;
+        font-weight: bold;
+    }
+
+    .form-select,
+    .form-control {
+        padding: 0.7rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #B78E80;
+        box-shadow: 0 0 0 2px rgba(183, 142, 128, 0.2);
+        outline: none;
+    }
+
+    .btn-primary {
+        background-color: #B78E80;
+        border-color: #B78E80;
+    }
+
+    .btn-group .btn {
+        margin-right: 0.5rem; 
+        transition: background-color 0.3s, transform 0.2s ease; 
+    }
+
+    .btn-group .btn:hover {
+        background-color: #9a766a !important; 
+        transform: scale(1.05); 
+    }
+
+    .btn-group .btn:last-child {
+        margin-right: 0; 
+    }
+
+    .btn-primary:hover {
+        background-color: #9a766a;
+        border-color: #9a766a;
+    }
+
+    .btn-outline-primary {
+        border-color: #B78E80;
+        color: #B78E80;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #B78E80;
+        color: #fff;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5em 0.75em;
+    }
+
+    .table th {
+        background-color: #f9f9f9;
+        color: #555;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: #B78E80 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background-color: #B78E80 !important;
+        color: white !important;
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            padding: 1.5rem;
+            border-width: 15px;
+        }
+
+        .form-select,
+        .form-control {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.booking-table').DataTable({
+            order: [[3, 'desc']],
+            responsive: true
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Quản Lý Đặt Hàng</h5>
+        <div>
+            <a href="{% url 'bookings:admin_booking_calendar' %}" class="btn btn-outline-primary me-2">
+                <i class="bi bi-calendar-event"></i> Xem Lịch
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="all" {% if status_filter == 'all' %}selected{% endif %}>Tất Cả Trạng Thái</option>
+                            {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="date" name="date_from" class="form-control"
+                            value="{{ date_from }}" placeholder="From date">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="date" name="date_to" class="form-control"
+                            value="{{ date_to }}" placeholder="To date">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary">Lọc</button>
+                        <a href="{% url 'bookings:admin_booking_list' %}" class="btn btn-secondary">Làm Mới</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover booking-table">
+                <thead>
+                    <tr>
+                        <th>Khách Hàng</th>
+                        <th>Dịch Vụ</th>
+                        <th>Ngày & Giờ</th>
+                        <th>Trạng Thái</th>
+                        <th>Điểm</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'accounts:admin_user_detail' booking.customer.pk %}">
+                                {{ booking.customer.get_full_name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'services:admin_service_detail' booking.service.pk %}">
+                                {{ booking.service.name }}
+                            </a>
+                        </td>
+                        <td>{{ booking.booking_date|date:"M d, Y H:i" }}</td>
+                        <td>
+                            <span class="badge bg-{{ booking.get_status_class }}">
+                                {{ booking.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if booking.points_awarded %}
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            {% else %}
+                            <i class="bi bi-x-circle-fill text-secondary"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'bookings:admin_booking_detail' booking.pk %}"
+                                    class="btn btn-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'bookings:admin_booking_update' booking.pk %}"
+                                    class="btn btn-secondary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">Không tìm thấy đặt hàng</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

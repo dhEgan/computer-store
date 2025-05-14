@@ -1,0 +1,153 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}User Management{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        background: #fff;
+        margin-top: 25px;
+        padding: 2rem;
+        border-radius: 8px;
+        border: 25px solid #B78E80;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 110px;
+    }
+
+    .card-header h5 {
+        color: #B78E80;
+        font-weight: bold;
+    }
+
+    .form-control {
+        padding: 0.7rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .form-control:focus {
+        border-color: #B78E80;
+        box-shadow: 0 0 0 2px rgba(183, 142, 128, 0.2);
+        outline: none;
+    }
+
+    .btn-primary {
+        background-color: #B78E80;
+        border-color: #B78E80;
+    }
+
+    .btn-primary:hover {
+        background-color: #9a766a;
+        border-color: #9a766a;
+    }
+
+    .table th {
+        background-color: #f9f9f9;
+        color: #555;
+    }
+
+    .badge.bg-danger {
+        background-color: #dc3545;
+    }
+
+    .badge.bg-info {
+        background-color: #0dcaf0;
+    }
+
+    .badge.bg-secondary {
+        background-color: #6c757d;
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            padding: 1.5rem;
+            border-width: 15px;
+        }
+
+        .form-control {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Quản Lý Người Dùng</h5>
+        <form method="get" class="d-flex" style="gap: 10px;">
+            <input type="search" name="q" placeholder="Tìm kiếm người dùng..." value="{{ search_query }}"
+                   class="form-control">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Tên người dùng</th>
+                        <th>Email</th>
+                        <th>Tên đầy đủ</th>
+                        <th>Vai trò</th>
+                        <th>Đã tham gia</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.get_full_name }}</td>
+                        <td>
+                            <span class="badge bg-{% if user.is_admin %}danger{% elif user.is_staff_member %}info{% else %}secondary{% endif %}">
+                                {{ user.get_user_type_display }}
+                            </span>
+                        </td>
+                        <td>{{ user.date_joined|date:"Y-m-d" }}</td>
+                        <td>
+                            <a href="{% url 'accounts:admin_user_detail' user.pk %}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">Không tìm thấy người dùng</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if users.has_other_pages %}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if users.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ users.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in users.paginator.page_range %}
+                <li class="page-item {% if users.number == page_num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_num }}{% if search_query %}&q={{ search_query }}{% endif %}">{{ page_num }}</a>
+                </li>
+                {% endfor %}
+
+                {% if users.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ users.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

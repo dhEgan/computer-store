@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="heart-image-title">
+        <img src="/static/images/heart.png" alt="Heart" class="heart-image">
+        
+      </div>
+      
+    <section class="about">
+        <h2>ĐIỆN TỬ XANH - Nâng tầm công nghệ, đồng hành cùng bạn</h2>
+        <p>ĐIỆN TỬ XANH tự hào là điểm đến uy tín hàng đầu trong lĩnh vực phân phối laptop chất lượng, nơi bạn dễ dàng tìm thấy thiết bị phù hợp cho học tập, công việc và giải trí. Với đội ngũ tư vấn viên am hiểu công nghệ, nhiệt tình và luôn đặt lợi ích khách hàng lên hàng đầu, chúng tôi cam kết mang đến những sản phẩm chính hãng, giá cả cạnh tranh và dịch vụ hậu mãi chuyên nghiệp.
+
+            Tại ĐIỆN TỬ XANH, mỗi mẫu laptop đều được chọn lọc kỹ lưỡng từ các thương hiệu hàng đầu như Dell, HP, ASUS, Lenovo và Apple. Chúng tôi cung cấp đa dạng các dòng máy từ phổ thông đến cao cấp, laptop gaming, laptop văn phòng và cả máy cũ được kiểm định nghiêm ngặt.
+            
+            Không chỉ là nơi bán laptop, ĐIỆN TỬ XANH còn mang đến trải nghiệm mua sắm dễ dàng, hỗ trợ trả góp linh hoạt, bảo hành tận nơi và dịch vụ kỹ thuật đáng tin cậy. Chúng tôi luôn đồng hành cùng bạn trong suốt quá trình sử dụng, giúp bạn khai thác tối đa hiệu suất của thiết bị.
+            
+            Hãy đến và cảm nhận sự khác biệt tại ĐIỆN TỬ XANH – nơi công nghệ gặp gỡ chất lượng và niềm tin được xây dựng từ sự tận tâm!</p>
+    </section>
+    <a href="{% url 'bookings:book_now' %}" class="btn">Đặt hàng ngay</a>
+</section>
+
+<section class="services">
+    <div class="highlighted-title">
+        Sản Phẩm Nổi Bật
+    </div>
+    <div class="highlighted-subtitle">
+        Một số sản phẩm được đặt hàng nhiều nhất
+    </div>
+    <div class="service-grid">
+        {% for service in services %}
+        <div class="service-card">
+            {% if service.image %}
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" class="service-image">
+            {% endif %}
+            <h3>{{ service.name |truncatechars:40 }}</h3>
+            <p>{{ service.description|truncatechars:60 }}</p>
+            <p class="price">{{ service.price }} VND</p>
+            <a href="{% url 'bookings:book_now' %}?service={{ service.id }}" class="btn">Đặt hàng</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+{% endblock %}

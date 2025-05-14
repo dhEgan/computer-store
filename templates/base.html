@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Woods Spa Center{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now 'U' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<script>
+    function toggleDropdown(event) {
+        event.preventDefault();
+        var dropdown = document.getElementById("userDropdown");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    
+    window.addEventListener("click", function(e) {
+        const dropdown = document.getElementById("userDropdown");
+        if (!e.target.closest(".dropdown")) {
+            dropdown.style.display = "none";
+        }
+    });
+</script>
+<style>
+    .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    min-width: 150px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border-radius: 8px;
+    padding: 8px 0;
+    list-style: none;
+    text-align: left;
+}
+
+.dropdown-menu li {
+    padding: 2px 4px;
+}
+
+.dropdown-menu li a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f0f0f0;
+}
+</style>
+<body>
+    <header style="background-image: url('{% static 'images/backnav.jpg' %}');">
+
+
+        <div class="header-top" >
+            <div class="logo-circle">
+                <img src="{% static 'images/logodientuxanh.png' %}" alt="Woods Spa Logo" class="logo-img">
+            </div>
+            <h1 class="brand-name">ĐIỆN TỬ XANH</h1>
+            <div class="contact-icon">
+                <a href="#contact">
+                    <img src="{% static 'images/contact.png' %}" alt="Liên hệ">
+                </a>
+            </div>
+        </div>  
+
+        <div class="header-bottom">
+            <a href="{% url 'bookings:book_now' %}" class="experience-btn">TRẢI NGHIỆM NGAY</a>
+        </div>
+
+       
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'services:home' %}">Trang chủ</a></li>
+                <li><a href="{% url 'chat:expert' %}">Chat chuyên viên</a></li>
+                <li><a href="{% url 'services:list' %}">Sản phẩm</a></li>
+                <li><a href="{% url 'bookings:book_now' %}">Đặt hàng</a></li>
+                <li><a href="{% url 'tips:list' %}">Mẹo máy tính</a></li>
+                {% if user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" onclick="toggleDropdown(event)">
+                        <img src="{% static 'images/default-avartar.jpg' %}" alt="Avatar" class="avatar">
+                    </a>
+                    <ul class="dropdown-menu" id="userDropdown">
+                        <li><a href="{% url 'accounts:profile' %}">Hồ sơ</a></li>
+                        <li><a href="{% url 'accounts:user_logout' %}">Đăng xuất</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                    <li><a href="{% url 'accounts:login' %}">Đăng nhập</a></li>
+                    <li><a href="{% url 'accounts:register' %}">Đăng ký</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <p>02 Hồ Nghinh, Phước Mỹ, Sơn Trà, tp. Đà Nẵng</p>
+                <p>Điện thoại: 0702 664 640</p>
+            </div>
+            <div class="footer-section">
+                <h3>Bản quyền & điều khoản</h3>
+                <p>Giá trên đã bao gồm 5% phí dịch vụ và 10% tip</p>
+                <p>Nếu bạn muốn thay đổi hoặc hủy bỏ lịch hẹn vui lòng liên hệ trước</p>
+                <p>Chính sách hủy phụ thuộc vào loại dịch vụ và thời điểm ưu đãi</p>
+            </div>
+            <div class="footer-section">
+                <h3>Mạng xã hội</h3>
+                <div class="social-icons">
+                    <a href="#"><img src="/static/images/facebook-icon.jpg" alt="Facebook"></a>
+                    <a href="#"><img src="/static/images/instagram-icon.jpg" alt="Instagram"></a>
+                    <a href="#"><img src="/static/images/zalo-icon.png" alt="Zalo"></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Điện Tử XANH Center. All rights reserved.</p>
+        </div>
+    </footer>
+    
+</body>
+</html>

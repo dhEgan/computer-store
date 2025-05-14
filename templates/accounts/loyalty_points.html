@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<section class="loyalty-points">
+    <div class="container">
+        <h2>Điểm tích lũy của bạn</h2>
+        
+        <div class="points-display">
+            <p>Bạn đang có: <strong>{{ points.points }}</strong> điểm</p>
+            
+            {% if points.points >= 50 %}
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="redeem_points" class="btn btn-primary">
+                    Quy đổi 50 điểm lấy voucher giảm 50%
+                </button>
+            </form>
+            {% else %}
+            <p>Cần thêm {{ 50|subtract:points.points }} điểm nữa để quy đổi voucher</p>
+            {% endif %}
+        </div>
+        
+        <div class="vouchers">
+            <h3>Voucher của bạn</h3>
+            {% if vouchers %}
+            <ul>
+                {% for voucher in vouchers %}
+                <li>
+                    Mã: <strong>{{ voucher.code }}</strong> - 
+                    Giảm {{ voucher.discount_percent }}% - 
+                    Hết hạn: {{ voucher.expires_at|date:"d/m/Y" }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Bạn chưa có voucher nào</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

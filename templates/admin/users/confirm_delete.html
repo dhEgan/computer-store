@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h4>Xác nhận xóa người dùng</h4>
+        </div>
+        <div class="card-body">
+            <p>Bạn có chắc chắn muốn xóa người dùng <strong>{{ object.username }}</strong>?</p>
+            <p class="text-danger">Hành động này không thể hoàn tác!</p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Xác nhận xóa
+                </button>
+                <a href="{% url 'accounts:admin_user_detail' object.pk %}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Hủy bỏ
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

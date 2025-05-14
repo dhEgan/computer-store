@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="category-tips">
+    <h1>Mẹo làm đẹp: {{ category.name }}</h1>
+    <p class="category-description">{{ category.description }}</p>
+    
+    <div class="tip-grid">
+        {% for tip in tips %}
+        <div class="tip-card">
+            {% if tip.image %}
+            <img src="{{ tip.image.url }}" alt="{{ tip.title }}" class="tip-image">
+            {% endif %}
+            <h3><a href="{{ tip.get_absolute_url }}">{{ tip.title }}</a></h3>
+            <p>{{ tip.content|truncatewords:30 }}</p>
+            <a href="{{ tip.get_absolute_url }}" class="btn-small">Xem thêm</a>
+        </div>
+        {% empty %}
+        <p>Chưa có mẹo nào trong danh mục này.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="tips">
+    <h1>Mẹo máy tính</h1>
+    <div class="tip-grid">
+        {% for tip in tips %}
+        <div class="tip-card">
+            {% if tip.image %}
+            <img src="{{ tip.image.url }}" alt="{{ tip.title }}" class="tip-image">
+            {% endif %}
+            <h3>{{ tip.title |truncatechars:43 }}</h3>
+            <p>{{ tip.content|truncatechars:150 }}</p>
+            <a href="{{ tip.get_absolute_url }}" class="btn-small">Xem thêm</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

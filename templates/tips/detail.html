@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<article class="tip-detail">
+    <div class="tip-header">
+        <div class="breadcrumb">
+            <a href="{% url 'tips:list' %}">Mẹo máy tính</a> &raquo;
+            {% if tip.category %}
+            <a href="{% url 'tips:category' tip.category.slug %}">{{ tip.category.name }}</a> &raquo;
+            {% endif %}
+            <span>{{ tip.title }}</span>
+        </div>
+        
+        <h1>{{ tip.title }}</h1>
+        
+        <div class="tip-meta">
+            <span class="date">{{ tip.created_at|date:"d/m/Y" }}</span>
+            {% if tip.category %}
+            <span class="category">{{ tip.category.name }}</span>
+            {% endif %}
+            <span class="views">{{ tip.views }} lượt xem</span>
+        </div>
+    </div>
+    
+    <div class="tip-content">
+        {% if tip.image %}
+        <div class="featured-image">
+            <img src="{{ tip.image.url }}" alt="{{ tip.title }}">
+        </div>
+        {% endif %}
+        
+        <div class="content">
+            {{ tip.content|linebreaks }}
+        </div>
+    </div>
+    
+    <div class="tip-footer">
+        <div class="tags">
+            {% for tag in tip.tags.all %}
+            <a href="{% url 'tips:tag' tag.slug %}" class="tag">{{ tag.name }}</a>
+            {% endfor %}
+        </div>
+        
+        <div class="share-buttons">
+            <span>Chia sẻ:</span>
+            <a href="#" class="social-share facebook">Facebook</a>
+            <a href="#" class="social-share twitter">Twitter</a>
+            <a href="#" class="social-share zalo">Zalo</a>
+        </div>
+    </div>
+</article>
+
+<section class="related-tips">
+    <h2>Mẹo liên quan</h2>
+    <div class="tip-grid">
+        {% for tip in related_tips %}
+        <div class="tip-card">
+            {% if tip.image %}
+            <img src="{{ tip.image.url }}" alt="{{ tip.title }}" class="tip-image">
+            {% endif %}
+            <h3><a href="{{ tip.get_absolute_url }}">{{ tip.title }}</a></h3>
+            <p>{{ tip.excerpt }}</p>
+            <a href="{{ tip.get_absolute_url }}" class="btn">Xem thêm</a>
+        </div>
+        {% empty %}
+        <p>Chưa có mẹo liên quan.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<aside class="tip-sidebar">
+    <div class="sidebar-section">
+        <h3>Mẹo nổi bật</h3>
+        <ul class="featured-tips">
+            {% for tip in featured_tips %}
+            <li>
+                <a href="{{ tip.get_absolute_url }}">{{ tip.title }}</a>
+                <span class="date">{{ tip.created_at|date:"d/m/Y" }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="sidebar-section">
+        <h3>Danh mục phổ biến</h3>
+        <ul class="popular-categories">
+            {% for category in popular_categories %}
+            <li>
+                <a href="{% url 'tips:category' category.slug %}">
+                    {{ category.name }}
+                    <span class="count">({{ category.tip_count }})</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</aside>
+{% endblock %}

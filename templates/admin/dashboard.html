@@ -1,0 +1,105 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Bảng Điều Khiển{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Tổng số người dùng</h5>
+                <h2 class="card-text">{{ total_users }}</h2>
+                <p class="small mb-0">
+                    <i class="bi bi-arrow-up"></i> 
+                    {{ new_users_week }} mới tuần này ({{ user_growth }}%)
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Tổng số đặt hàng</h5>
+                <h2 class="card-text">{{ total_bookings }}</h2>
+                <p class="small mb-0">
+                    <i class="bi bi-check-circle"></i> 
+                    {{ completed_bookings }} hoàn thành
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">Đặt Lịch Mới</h5>
+                <h2 class="card-text">{{ new_bookings_week }}</h2>
+                <p class="small mb-0">Tuần này</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <h5 class="card-title">Doanh Thu Hàng Tháng</h5>
+                <h2 class="card-text">${{ revenue_month }}</h2>
+                <p class="small mb-0">30 ngày qua</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Người Dùng Gần Đây</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for user in recent_users %}
+                    <a href="{% url 'accounts:admin_user_detail' user.pk %}" 
+                       class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ user.get_full_name }}</h6>
+                            <small>{{ user.date_joined|timesince }} trước kia</small>
+                        </div>
+                        <p class="mb-1">{{ user.email }}</p>
+                        <small class="text-muted">{{ user.get_user_type_display }}</small>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Đặt Hàng Gần Đây</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for booking in recent_bookings %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ booking.service.name }}</h6>
+                            <span class="badge bg-{{ booking.get_status_class }}">
+                                {{ booking.get_status_display }}
+                            </span>
+                        </div>
+                        <p class="mb-1">
+                            <strong>{{ booking.customer.get_full_name }}</strong> - 
+                            {{ booking.booking_date|date:"M d, Y H:i" }}
+                        </p>
+                        <small class="text-muted">Đã tạo {{ booking.created_at|timesince }} trước đây</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

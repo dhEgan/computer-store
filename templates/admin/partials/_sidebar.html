@@ -1,0 +1,42 @@
+<div class="sidebar" style="background: #B78E80; padding: 1.1rem;  box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 250px; height: 100vh;">
+    <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+        <h4 style="text-align: center; color: white; font-weight: bold;">Trang Quản Trị</h4>
+        <hr style="border-color: rgba(255,255,255,0.5);">
+        
+        <a href="{% url 'accounts:admin_dashboard' %}"
+           class="btn"
+           style="display: block; text-align: start; padding: 0.7rem; background-color: white; color: black; border-radius: 4px; text-decoration: none; {% if request.resolver_match.url_name == 'admin_dashboard' %}box-shadow: 0 0 5px white;{% endif %}">
+           <i class="bi bi-speedometer2 me-2"></i> Bảng Điều Khiển
+        </a>
+
+        <a href="{% url 'accounts:admin_user_list' %}"
+           class="btn"
+           style="display: block; text-align: start; padding: 0.7rem; background-color: white; color: black; border-radius: 4px; text-decoration: none; {% if 'users' in request.resolver_match.url_name %}box-shadow: 0 0 5px white;{% endif %}">
+           <i class="bi bi-people me-2"></i> Quản Lý Người Dùng
+        </a>
+
+        <a href="{% url 'services:admin_service_list' %}"
+           class="btn"
+           style="display: block; text-align: start; padding: 0.7rem; background-color: white; color: black; border-radius: 4px; text-decoration: none; {% if 'services' in request.resolver_match.url_name %}box-shadow: 0 0 5px white;{% endif %}">
+           <i class="bi bi-scissors me-2"></i> Quản Lý Sản Phẩm
+        </a>
+
+        <a href="{% url 'bookings:admin_booking_list' %}"
+           class="btn"
+           style="display: block; text-align: start; padding: 0.7rem; background-color: white; color: black; border-radius: 4px; text-decoration: none; {% if 'bookings' in request.resolver_match.url_name %}box-shadow: 0 0 5px white;{% endif %}">
+           <i class="bi bi-calendar-check me-2"></i> Quản Lý Đặt Hàng
+        </a>
+
+        <a href="{% url 'tips:admin_tip_list' %}"
+           class="btn"
+           style="display: block; text-align: start; padding: 0.7rem; background-color: white; color: black; border-radius: 4px; text-decoration: none; {% if 'tips' in request.resolver_match.url_name %}box-shadow: 0 0 5px white;{% endif %}">
+           <i class="bi bi-lightbulb me-2"></i> Quản Lý Mẹo Thiết Bị
+        </a>
+
+        <a href="{% url 'accounts:manage_points' %}"
+           class="btn"
+           style="display: block; text-align: start; padding: 0.7rem; background-color: white; color: black; border-radius: 4px; text-decoration: none; {% if 'loyalty' in request.resolver_match.url_name %}box-shadow: 0 0 5px white;{% endif %}">
+           <i class="bi bi-star me-2"></i> Quản Lý Điểm Tích Lũy
+        </a>
+    </div>
+</div>

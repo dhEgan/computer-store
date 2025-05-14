@@ -1,0 +1,28 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Thống kê người dùng</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Tổng đơn hàng
+                <span class="badge bg-primary rounded-pill">{{ user.booking_set.count }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Đặt hàng đã hoàn thành
+                <span class="badge bg-success rounded-pill">{{ completed_bookings_count }}
+                </span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Điểm tích lũy
+                <span class="badge bg-warning rounded-pill">
+                    {{ user.loyalty_points.points|default:0 }}
+                </span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Phiếu quà tặng đang hoạt động
+                <span class="badge bg-info rounded-pill">
+                    {{ active_vouchers_count }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>

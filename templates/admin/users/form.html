@@ -1,0 +1,125 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} Người dùng{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} Người dùng</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if not form.instance.pk %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Tên đăng nhập</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                        <div class="text-danger">{{ form.username.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Vai trò</label>
+                        {{ form.user_type }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu</label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                        <div class="text-danger">{{ form.password1.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Xác nhận mật khẩu</label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                        <div class="text-danger">{{ form.password2.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Tên</label>
+                        {{ form.first_name }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Họ</label>
+                        {{ form.last_name }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="text-danger">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Điện thoại</label>
+                        {{ form.phone }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Địa chỉ</label>
+                {{ form.address }}
+            </div>
+            
+            {% if form.instance.pk %}
+            <div class="mb-3">
+                <label class="form-label">Nhóm</label>
+                {{ form.groups }}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Quyền</label>
+                {{ form.user_permissions }}
+            </div>
+            
+            <div class="mb-3 form-check">
+                {{ form.is_active }}
+                <label class="form-check-label">Thao tác</label>
+            </div>
+            
+            <div class="mb-3 form-check">
+                {{ form.is_staff }}
+                <label class="form-check-label">Tình trạng nhân viên</label>
+            </div>
+            {% endif %}
+            
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Cập nhật{% else %}Thêm{% endif %} Người dùng
+            </button>
+            <a href="{% if form.instance.pk %}{% url 'accounts:admin_user_detail' form.instance.pk %}{% else %}{% url 'accounts:admin_user_list' %}{% endif %}" 
+               class="btn btn-secondary">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

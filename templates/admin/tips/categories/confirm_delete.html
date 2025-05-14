@@ -1,0 +1,10 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <p>Bạn có chắc muốn xóa "{{ object }}"?</p>
+    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+    <a href="{% url 'tips:admin_tip_category_list' %}" class="btn btn-secondary">Hủy</a>
+</form>
+{% endblock %}

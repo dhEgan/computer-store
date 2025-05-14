@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="booking-detail">
+    <h1>Chi tiết đặt hàng</h1>
+    
+    <div class="booking-info">
+        <div class="booking-card">
+            <h2>Thông tin đặt hàng</h2>
+            <div class="info-row">
+                <span class="label">Mã đặt hàng:</span>
+                <span class="value">woodsspa#{{ booking.id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Sản phẩm:</span>
+                <span class="value">{{ booking.service.name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Ngày giờ:</span>
+                <span class="value">{{ booking.booking_date|date:"d/m/Y H:i" }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Trạng thái:</span>
+                <span class="value status-{{ booking.status }}">{{ booking.get_status_display }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Ghi chú:</span>
+                <span class="value">{{ booking.notes|default:"Không có ghi chú" }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Ngày đặt:</span>
+                <span class="value">{{ booking.created_at|date:"d/m/Y H:i" }}</span>
+            </div>
+        </div>
+        
+        <div class="service-card">
+            <h2>Thông tin sản phẩm</h2>
+            {% if booking.service.image %}
+            <img src="{{ booking.service.image.url }}" alt="{{ booking.service.name }}" class="service-image">
+            {% endif %}
+            <h3>{{ booking.service.name }}</h3>
+            <p>{{ booking.service.description|truncatewords:20 }}</p>
+            <div class="service-meta">
+                <span class="price">{{ booking.service.price }} VND</span>
+                <span class="duration">{{ booking.service.duration_in_minutes }} phút</span>
+            </div>
+            <a href="{{ booking.service.get_absolute_url }}" class="btn-detail">Xem chi tiết</a>
+        </div>
+    </div>
+    
+    {% if booking.is_upcoming %}
+<div class="booking-actions">
+    <form method="post" action="{% url 'bookings:cancel_booking' booking.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-cancel" 
+                onclick="return confirm('Bạn có chắc chắn muốn hủy đặt hàng này?')">
+            Hủy đặt hàng
+        </button>
+    </form>
+</div>
+{% endif %}
+{% if request.user.is_staff and booking.status == 'completed' %}
+<div class="points-info">
+    <p>Khách hàng đã được cộng 10 điểm cho đơn đặt này.</p>
+    <p>Tổng điểm hiện tại: {{ booking.customer.loyalty_points.points }}</p>
+</div>
+{% endif %}
+    
+    <div class="spa-info">
+        <h2>Thông tin Điện Tử XANH</h2>
+        <div class="info-content">
+            <p><strong>Địa chỉ:</strong> 02 Hồ Nghinh, Phước Mỹ, Sơn Trà, tp. Đà Nẵng</p>
+            <p><strong>Điện thoại:</strong> 0702 664 640</p>
+            <p><strong>Email:</strong> info@dientuxanh.com</p>
+            <p><strong>Giờ làm việc:</strong> Thứ 2 - Thứ 6: 9:00 - 20:00 | Thứ 7 - CN: 9:00 - 18:00</p>
+        </div>
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d239.6154434382894!2d108.242972!3d16.0734225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314217ef822bcca1%3A0x17f345ecfaecb192!2zV29vZHMgU3BhIMSQw6AgTuG6tW5n!5e0!3m2!1svi!2s!4v1745951085188!5m2!1svi!2s" 
+                    width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+{% endblock %}

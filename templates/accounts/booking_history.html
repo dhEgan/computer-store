@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="booking-history">
+    <h1>Lịch sử đặt hàng</h1>
+    
+    {% if bookings %}
+    <div class="booking-list">
+        {% for booking in bookings %}
+        <div class="booking-item {% if booking.status == 'cancelled' %}cancelled{% endif %}">
+            <div class="booking-header">
+                <span class="booking-id">#{{ booking.id }}</span>
+                <span class="booking-date">{{ booking.booking_date|date:"d/m/Y H:i" }}</span>
+                <span class="booking-status status-{{ booking.status }}">
+                    {{ booking.get_status_display }}
+                </span>
+            </div>
+            
+            <div class="booking-details">
+                <div class="service-info">
+                    <h3>{{ booking.service.name }}</h3>
+                    <p>{{ booking.service.description|truncatewords:15 }}</p>
+                </div>
+                
+                <div class="booking-actions">
+                    <a href="{% url 'bookings:booking_detail' booking.id %}" class="btn btn-detail">
+                        Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-bookings">
+        <p>Bạn chưa có đặt hàng nào.</p>
+        <a href="{% url 'bookings:book_now' %}" class="btn">Đặt hàng ngay</a>
+    </div>
+    {% endif %}
+</section>
+
+<style>
+.booking-history {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.booking-list {
+    margin-top: 20px;
+}
+
+.booking-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.booking-status {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-confirmed {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-completed {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.booking-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.service-info {
+    flex: 1;
+}
+
+.booking-actions {
+    display: flex;
+    align-items: center;
+}
+
+.no-bookings {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.btn-detail {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-detail:hover {
+    background-color: #5a6268;
+}
+</style>
+{% endblock %}

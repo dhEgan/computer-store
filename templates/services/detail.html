@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="service-detail-page">
+    <div class="service-detail">
+        <div class="service-image-container">
+            {% if service.image %}
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" class="service-image">
+            {% endif %}
+        </div>
+        
+        <div class="service-info">
+            <h1>{{ service.name }}</h1>
+            {% if service.category %}
+            <span class="service-category">Danh mục: {{ service.category.name }}</span>
+            {% endif %}
+            
+            <div class="service-meta">
+                <span class="price">{{ service.price }} VND</span>
+                <span class="duration">{{ service.duration_in_minutes }} phút</span>
+            </div>
+            
+            <div class="service-description">
+                <h3>Mô tả sản phẩm</h3>
+                <p>{{ service.description }}</p>
+            </div>
+            
+            <div class="service-actions">
+                <a href="{% url 'bookings:book_now' %}?service={{ service.id }}" class="btn">Đặt hàng ngay</a>
+            </div>
+        </div>
+
+        <div class="service-rating">
+            <div class="average-rating">
+                {% if service.average_rating > 0 %}
+                    <span class="rating-stars">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= service.average_rating %}★{% else %}☆{% endif %}
+                        {% endfor %}
+                    </span>
+                    <span class="rating-value">{{ service.average_rating|floatformat:1 }}</span>
+                    <span class="review-count">({{ service.review_count }} đánh giá)</span>
+                {% else %}
+                    <span class="no-rating">Chưa có đánh giá</span>
+                {% endif %}
+            </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'services:add_review' service.slug %}" class="btn btn-review">Viết đánh giá</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}?next={% url 'services:add_review' service.slug %}" class="btn btn-review">Đăng nhập để đánh giá</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="reviews">
+        <h2>Đánh giá sản phẩm</h2>
+        
+        {% if service.reviews.all %}
+        <div class="review-list">
+            {% for review in service.reviews.all %}
+            <div class="review-card">
+                <div class="review-header">
+                    <span class="review-user">{{ review.user.get_full_name|default:review.user.username }}</span>
+                    <span class="review-date">{{ review.created_at|date:"d/m/Y" }}</span>
+                </div>
+                <div class="rating-stars">
+                    {{ review.get_rating_stars }}
+                </div>
+                <div class="review-comment">
+                    <p>{{ review.comment }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

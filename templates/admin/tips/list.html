@@ -1,0 +1,113 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Quản Lý Mẹo Làm Đẹp{% endblock %}
+
+{% block content %}
+<div class="card" style="background: #fff; margin-top: 25px; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border: 25px solid #B78E80; margin-bottom: 110px;">
+    <div class="card-header d-flex justify-content-between align-items-center" style="border-bottom: 1px solid #ddd; margin-bottom: 1rem;">
+        <h2 style="color: #B78E80; margin: 0;">Quản Lý Mẹo Thiết Bị</h2>
+        <div>
+            <a href="{% url 'tips:admin_tip_category_list' %}" class="btn btn-outline-secondary me-2" style="border-color: #B78E80; color: #B78E80;">
+                Danh Mục
+            </a>
+            <a href="{% url 'tips:admin_tip_create' %}" class="btn" style="background-color: #B78E80; color: white; border-radius: 4px; padding: 0.5rem 1rem;">
+                <i class="bi bi-plus-lg"></i> Thêm Mẹo
+            </a>
+        </div>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        <div class="table-responsive">
+            <table class="table table-hover" style="border-collapse: collapse; width: 100%; margin-top: 1rem;">
+                <thead style="background-color: #f9f9f9;">
+                    <tr style="border-bottom: 2px solid #B78E80;">
+                        <th style="padding: 0.75rem; color: #555; width: 30%;">Tiêu Đề</th>
+                        <th style="padding: 0.75rem; color: #555;">Danh Mục</th>
+                        <th style="padding: 0.75rem; color: #555;">Nổi Bật</th>
+                        <th style="padding: 0.75rem; color: #555;">Lượt Xem</th>
+                        <th style="padding: 0.75rem; color: #555;">Ngày Tạo</th>
+                        <th style="padding: 0.75rem; color: #555;">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tip in tips %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 0.75rem;">{{ tip.title }}</td>
+                        <td style="padding: 0.75rem;">{{ tip.category.name|default:"-" }}</td>
+                        <td style="padding: 0.75rem; text-align: center;">
+                            {% if tip.is_featured %}
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            {% else %}
+                            <i class="bi bi-x-circle-fill text-secondary"></i>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 0.75rem;">{{ tip.views }}</td>
+                        <td style="padding: 0.75rem;">{{ tip.created_at|date:"M d, Y" }}</td>
+                        <td style="padding: 0.75rem;">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% if tip.slug %}{{ tip.get_absolute_url }}{% else %}#{% endif %}" 
+                                   class="btn btn-outline-primary" style="border-radius: 4px;">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'tips:admin_tip_update' tip.pk %}" 
+                                   class="btn btn-outline-secondary" style="border-radius: 4px;">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'tips:admin_tip_delete' tip.pk %}" 
+                                   class="btn btn-outline-danger confirm-delete" style="border-radius: 4px;">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center" style="padding: 1rem;">Không tìm thấy mẹo thiết bị nào</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn:hover {
+        background-color: #9a766a !important;
+    }
+
+    .btn-group .btn {
+        margin-right: 0.5rem; 
+        transition: background-color 0.3s, transform 0.2s ease; 
+    }
+
+    .btn-group .btn:hover {
+        background-color: #9a766a !important; 
+        transform: scale(1.05); 
+    }
+
+    .btn-group .btn:last-child {
+        margin-right: 0; 
+    }
+
+    
+
+    @media (max-width: 768px) {
+        .card {
+            padding: 1.5rem !important;
+            margin: 1rem;
+        }
+
+        table th,
+        table td {
+            padding: 0.5rem !important;
+            
+        }
+
+        .card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+    }
+</style>
+{% endblock %}

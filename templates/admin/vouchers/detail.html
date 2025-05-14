@@ -1,0 +1,85 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Voucher Detail - {{ voucher.code }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Chi tiết phiếu thưởng</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Mã</th>
+                        <td><strong>{{ voucher.code }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Khách hàng</th>
+                        <td>
+                            <a href="{% url 'accounts:admin_user_detail' voucher.user.pk %}">
+                                {{ voucher.user.get_full_name }}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Giảm giá</th>
+                        <td>{{ voucher.discount_percent }}%</td>
+                    </tr>
+                    <tr>
+                        <th>Trạng thái</th>
+                        <td>
+                            {% if voucher.is_used %}
+                            <span class="badge bg-secondary">Đã sử dụng</span>
+                            {% elif voucher.expires_at < timezone.now %}
+                            <span class="badge bg-danger">Expired</span>
+                            {% else %}
+                            <span class="badge bg-success">Active</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Created At</th>
+                        <td>{{ voucher.created_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Expires At</th>
+                        <td>{{ voucher.expires_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Days Remaining</th>
+                        <td>
+                            {% if voucher.expires_at > timezone.now %}
+                            {{ voucher.expires_at|timeuntil }}
+                            {% else %}
+                            Expired
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Used At</th>
+                        <td>
+                            {% if voucher.is_used %}
+                            {{ voucher.used_at|date:"M d, Y H:i"|default:"-" }}
+                            {% else %}
+                            Not used
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'accounts:admin_user_detail' voucher.user.pk %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to User
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

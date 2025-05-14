@@ -1,0 +1,99 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Add{% endif %} Beauty Tip{% endblock %}
+
+{% block extra_css %}
+<style>
+    .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} Mẹo Thiết Bị</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                        <div class="text-danger">{{ form.title.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục</label>
+                        {{ form.category }}
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Nổi bật</label>
+                        <div class="form-check form-switch">
+                            {{ form.is_featured }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Ảnh</label>
+                        {{ form.image }}
+                        {% if form.instance.image %}
+                        <div class="mt-2">
+                            <img src="{{ form.instance.image.url }}" class="image-preview" id="imagePreview" alt="Preview of uploaded service image">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Nội dung</label>
+                {{ form.content }}
+                {% if form.content.errors %}
+                <div class="text-danger">{{ form.content.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Cập nhật{% else %}Thêm{% endif %} Mẹo
+            </button>
+            <a href="{% if form.instance.pk %}{% url 'tips:admin_tip_update' form.instance.pk %}{% else %}{% url 'tips:admin_tip_list' %}{% endif %}" 
+               class="btn btn-secondary">
+                Hủy
+            </a>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('id_image').addEventListener('change', function(event) {
+    const preview = document.getElementById('imagePreview');
+    if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (!preview) {
+                const newPreview = document.createElement('img');
+                newPreview.id = 'imagePreview';
+                newPreview.className = 'image-preview';
+                newPreview.src = e.target.result;
+                document.querySelector('label[for="id_image"]').insertAdjacentElement('afterend', newPreview);
+            } else {
+                preview.src = e.target.result;
+            }
+        }
+        reader.readAsDataURL(this.files[0]);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>{% if object %}Sửa{% else %}Create{% endif %} Booking</h4>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label">Khách hàng</label>
+                <input type="text" class="form-control" value="{{ object.customer.get_full_name|default:object.customer.username }}" readonly>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Sản phẩm</label>
+                <input type="text" class="form-control" value="{{ object.service.name }}" readonly>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Ngày đặt</label>
+                <input type="text" class="form-control" value="{{ object.booking_date }}" readonly>
+            </div>
+            
+            {{ form.as_p }}
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Lưu thay đổi
+            </button>
+            <a href="{% url 'bookings:admin_booking_detail' object.pk %}" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Hủy
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main style="margin-top: -30px; padding: 20px;">
+    <div class="profile-container" style="display: grid; grid-template-columns: 1fr 2fr; gap: 0rem; max-width: 900px; margin: 0 auto;">
+       
+        <div class="profile-actions" style="background: #B78E80; padding: 2rem;border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 550px; margin-right:30px;">
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+                <a href="{% url 'accounts:change_password' %}" class="btn" style="display: block; text-align: center; padding: 0.7rem; background-color: white ; color: black; border-radius: 4px; text-decoration: none ;">THIẾT LẬP TÀI KHOẢN</a>
+                
+                {% if request.user.is_admin %}
+                <a href="/accounts/admin/" class="btn btn-admin" style="display: block; text-align: center; padding: 0.7rem; background-color: white ; color: black; border-radius: 4px; text-decoration: none;">QUẢN TRỊ HỆ THỐNG</a>
+                {% elif request.user.is_staff_member %}
+        <a href="{% url 'accounts:staff_dashboard' %}" class="btn btn-staff" style="display: block; text-align: center; padding: 0.7rem; background-color: white ; color: black; border-radius: 4px; text-decoration: none;">BẢNG ĐIỀU KHIỂN NHÂN VIÊN</a>
+        {% else %}
+                <a href="{% url 'accounts:loyalty_points' %}" class="btn" style="display: block; text-align: center; padding: 0.7rem; background-color: white ; color: black; border-radius: 4px; text-decoration: none;">ĐIỂM TÍCH LŨY</a>
+                {% endif %}
+                
+                {% if request.user.is_customer %}
+                <a href="{% url 'accounts:booking_history' %}" class="btn" style="display: block; text-align: center; padding: 0.7rem; background-color: white ; color: black; border-radius: 4px; text-decoration: none;">LỊCH SỬ ĐẶT LỊCH</a>
+                {% endif %}
+            </div>
+        </div>
+
+       
+        <div class="profile-form" style="background: #fff; margin-top: 25px; padding: 2rem; border-radius: 8px ; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border: 25px solid #B78E80; margin-bottom: 110px;">
+            <h1 style="color: #B78E80; margin-bottom: 1.5rem; text-align: center;">Hồ sơ cá nhân</h1>
+            
+            <form method="post" style="margin-top: -50px;">
+                {% csrf_token %}
+                <div class="profile-table">
+                    {% for field in form %}
+                    <div class="table-row">
+                        <div class="table-cell label-cell">{{ field.label }}</div>
+                        <div class="table-cell input-cell">
+                            {{ field }}
+                            {% if field.errors %}
+                            <div class="error-text">
+                                {{ field.errors|join:", " }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn" style="display: block; width: 200px; margin: 1.5rem auto 0; padding: 0.8rem; background-color: #B78E80; color: white; border: none; border-radius: 4px;">CẬP NHẬT</button>
+            </form>
+            
+        </div>
+    </div>
+</main>
+
+<style>
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.7rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    form{
+        box-shadow: none !important;
+        border-radius: none !important;
+    }
+    textarea{
+        resize: none;
+    }
+    
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #B78E80;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(183, 142, 128, 0.2);
+    }
+    
+    .btn-admin:hover {
+        background-color: #9a766a !important;
+    }
+    
+    
+    @media (max-width: 768px) {
+        .profile-container {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .profile-form form {
+            grid-template-columns: 1fr !important;
+        }
+        
+        .profile-actions, .profile-form {
+            padding: 1.5rem;
+        }
+    }
+
+    .profile-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.table-row {
+    display: table-row;
+}
+
+.table-cell {
+    display: table-cell;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    vertical-align: top;
+}
+
+.label-cell {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    color: #555;
+    width: 35%;
+}
+
+.input-cell {
+    background-color: #fff;
+}
+
+.error-text {
+    color: #d32f2f;
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+}
+
+</style>
+{% endblock %}

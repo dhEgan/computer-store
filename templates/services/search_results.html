@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="search-results">
+    <h1>Kết quả tìm kiếm cho "{{ query }}"</h1>
+    
+    {% if services %}
+    <div class="service-grid">
+        {% for service in services %}
+        <div class="service-card">
+            {% if service.image %}
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" class="service-image">
+            {% endif %}
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description|truncatewords:20 }}</p>
+            <p class="price">{{ service.price }} VND</p>
+            <a href="{{ service.get_absolute_url }}" class="btn">Chi tiết</a>
+            <a href="{% url 'bookings:book_now' %}?service={{ service.id }}" class="btn">Đặt ngay</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Không tìm thấy sản phẩm phù hợp.</p>
+    {% endif %}
+</section>
+{% endblock %}

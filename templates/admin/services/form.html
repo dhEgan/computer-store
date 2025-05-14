@@ -1,0 +1,127 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} Sản phẩm{% endblock %}
+
+{% block extra_css %}
+<style>
+    .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} Sản Phẩm</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Tên</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                        <div class="text-danger">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Danh Mục</label>
+                        {{ form.category }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Slug (URL identifier)</label>
+                        {{ form.slug }}
+                        <small class="form-text text-muted">Địa chỉ url được sinh từ tên sản phẩm</small>
+                        {% if form.slug.errors %}
+                        <div class="text-danger">{{ form.slug.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Giá</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₫
+                            </span>
+                            {{ form.price }}
+                        </div>
+                        {% if form.price.errors %}
+                        <div class="text-danger">{{ form.price.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Thời Gian (phút)</label>
+                        {{ form.duration }}
+                        {% if form.duration.errors %}
+                        <div class="text-danger">{{ form.duration.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Nổi Bật</label>
+                        <div class="form-check form-switch">
+                            {{ form.is_featured }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Ảnh</label>
+                        {{ form.image }}
+                        {% if form.instance.image %}
+                        <div class="mt-2">
+                            <img src="{{ form.instance.image.url }}" class="image-preview" id="imagePreview" alt="Preview of uploaded service image">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Mô Tả</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="text-danger">{{ form.description.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Update{% else %}Tạo{% endif %} Sản phẩm
+            </button>
+            <a href="{% if form.instance.pk %}{% url 'services:admin_service_detail' form.instance.pk %}{% else %}{% url 'services:admin_service_list' %}{% endif %}" 
+               class="btn btn-secondary">
+                Hủy
+            </a>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('id_image').addEventListener('change', function(event) {
+    const preview = document.getElementById('imagePreview');
+    if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (!preview) {
+                const newPreview = document.createElement('img');
+                newPreview.id = 'imagePreview';
+                newPreview.className = 'image-preview';
+                newPreview.src = e.target.result;
+                document.querySelector('label[for="id_image"]').insertAdjacentElement('afterend', newPreview);
+            } else {
+                preview.src = e.target.result;
+            }
+        }
+        reader.readAsDataURL(this.files[0]);
+    }
+});
+</script>
+{% endblock %}

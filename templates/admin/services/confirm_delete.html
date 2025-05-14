@@ -1,0 +1,30 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h4>Xác nhận xóa sản phẩm</h4>
+        </div>
+        <div class="card-body">
+            <p>Bạn có chắc chắn muốn xóa sản phẩm <strong>{{ object.name }}</strong>?</p>
+            
+            {% if object.booking_set.count > 0 %}
+            <div class="alert alert-warning">
+                Dịch vụ này có {{ object.booking_set.count }} đặt hàng liên quan!
+            </div>
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Xác nhận xóa
+                </button>
+                <a href="{% url 'services:admin_service_detail' object.pk %}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Hủy
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

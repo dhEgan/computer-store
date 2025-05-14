@@ -1,0 +1,53 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Manage Loyalty Points{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Quản lý điểm tích lũy</h5>
+    </div>
+    <div class="card-body">
+        {% if pending_bookings %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Khách hàng</th>
+                        <th>Sản phẩm</th>
+                        <th>Ngày đặt</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in pending_bookings %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'accounts:admin_user_detail' booking.customer.pk %}">
+                                {{ booking.customer.get_full_name }}
+                            </a>
+                        </td>
+                        <td>{{ booking.service.name }}</td>
+                        <td>{{ booking.booking_date|date:"M d, Y" }}</td>
+                        <td>
+                            <form method="post" action="{% url 'accounts:manage_points' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="booking_id" value="{{ booking.pk }}">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="bi bi-star"></i> Cộng 10 điểm
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Không có đơn đặt đang chờ xử lý yêu cầu thưởng điểm.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

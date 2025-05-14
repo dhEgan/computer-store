@@ -1,0 +1,36 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Chi tiết đánh giá{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Chi tiết đánh giá</h5>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-2 text-center">
+                <img src="https://ui-avatars.com/api/?name={{ review.user.get_full_name|urlencode }}&background=random" 
+                     alt="Avatar" class="rounded-circle mb-3" width="80">
+                <h6>{{ review.user.get_full_name }}</h6>
+                <div class="text-warning mb-2">
+                    {{ review.get_rating_stars }}
+                </div>
+                <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+            </div>
+            <div class="col-md-10">
+                <h5>Đánh giá cho <a href="{% url 'services:admin_service_detail' review.service.pk %}">{{ review.service.name }}</a></h5>
+                <div class="border p-3 rounded bg-light">
+                    {{ review.comment|linebreaks }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'services:admin_service_reviews' review.service.pk %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Quay lại phần Đánh giá
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

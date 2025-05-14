@@ -1,0 +1,75 @@
+{% load static %}
+<footer class="custom-footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Liên hệ</h3>
+            <p>02 Hồ Nghinh, Phước Mỹ, Sơn Trà, tp. Đà Nẵng</p>
+            <p>Điện thoại: 0702 664 640</p>
+        </div>
+        <div class="footer-section">
+            <h3>Bản quyền & điều khoản</h3>
+            <p>Giá trên đã bao gồm 5% phí sản phẩm</p>
+            <p>Nếu bạn muốn thay đổi hoặc hủy bỏ đơn hàng vui lòng liên hệ trước</p>
+            <p>Chính sách hủy phụ thuộc vào loại sản phẩm và thời điểm ưu đãi</p>
+        </div>
+        <div class="footer-section">
+            <h3>Mạng xã hội</h3>
+            <div class="social-icons">
+                <a href="#"><img src="{% static 'images/facebook-icon.jpg' %}" alt="Facebook"></a>
+                <a href="#"><img src="{% static 'images/instagram-icon.jpg' %}" alt="Instagram"></a>
+                <a href="#"><img src="{% static 'images/zalo-icon.png' %}" alt="Zalo"></a>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 Điện Tử XANH Center. All rights reserved.</p>
+    </div>
+</footer>
+<style>.custom-footer {
+    background-color: #f9f9f9;
+    padding: 40px 20px 20px;
+    color: #333;
+    font-family: 'Cormorant Garamond', serif;
+    border-top: 1px solid #e0e0e0;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.footer-section {
+    flex: 1 1 250px;
+    margin: 10px;
+}
+
+.footer-section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #21A691;
+}
+
+.footer-section p {
+    margin: 4px 0;
+}
+
+.social-icons a img {
+    width: 28px;
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.social-icons a img:hover {
+    transform: scale(1.1);
+}
+
+.copyright {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+</style>

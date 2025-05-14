@@ -1,0 +1,63 @@
+{% load static %}
+
+<header style="background-image: url('{% static 'images/backnav.jpg' %}');; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center;">
+        <img src="{% static 'images/logo.jpg' %}" alt="Logo" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 1rem;">
+        <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #B78E80; margin: 0;">Diện Tử XANH</h1>
+    </div>
+
+    <div class="dropdown" style="position: relative;">
+        <div onclick="toggleDropdown(event)" style="cursor: pointer; display: flex; align-items: center; font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: #333;">
+            <img src="{% static 'images/default-avartar.jpg' %}" alt="Avatar" class="avatar" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
+            <span>{{ request.user.get_full_name|default:request.user.username }}</span>
+        </div>
+        <ul id="userDropdown" class="dropdown-menu">
+            <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li><hr class="dropdown-divider" style="margin: 4px 0;"></li>
+            <li><a href="{% url 'accounts:profile' %}"><i class="fas fa-user"></i> Hồ sơ</a></li>
+            <li><hr class="dropdown-divider" style="margin: 4px 0;"></li>
+            <li><a href="{% url 'accounts:user_logout' %}"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+        </ul>
+    </div>
+</header>
+<style>
+    .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 120%;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 0;
+    z-index: 999;
+    list-style: none;
+}
+
+.dropdown-menu li a {
+    display: block;
+    padding: 10px 16px;
+    text-decoration: none;
+    color: #333;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f8f8f8;
+}
+
+</style>
+<script>
+    function toggleDropdown(event) {
+        event.stopPropagation();
+        var dropdown = document.getElementById("userDropdown");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    window.addEventListener("click", function () {
+        var dropdown = document.getElementById("userDropdown");
+        dropdown.style.display = "none";
+    });
+</script>
+

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="services-list">
+    <div class="search-bar">
+        <form method="get" action="{% url 'services:search' %}">
+            <input type="text" name="q" placeholder="Tìm kiếm sản phẩm..." value="{{ query|default:'' }}" class="search-input">
+            <button type="submit" class="btn search-btn"><i class="fas fa-search"></i> Tìm kiếm</button>
+        </form>
+    </div>
+
+    <h1 class="service-list-title">Danh sách sản phẩm</h1>
+    
+    {% if services %}
+    <div class="service-grid">
+        {% for service in services %}
+        <div class="service-card">
+            {% if service.image %}
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" class="service-image">
+            {% endif %}
+            <h3>{{ service.name }}</h3>
+            {% if service.category %}
+            <span class="service-category">{{ service.category.name }}</span>
+            {% endif %}
+            <p>{{ service.description|truncatewords:20 }}</p>
+            <div class="service-meta">
+                <span class="price">{{ service.price }} VND</span>
+                <span class="duration">{{ service.duration_in_minutes }} phút</span>
+            </div>
+            <div class="service-actions">
+                <a href="{{ service.get_absolute_url }}" class="btn">Chi tiết</a>
+                <a href="{% url 'bookings:book_now' %}?service={{ service.id }}" class="btn">Đặt ngay</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if services.has_previous %}
+            <a href="?page=1">&laquo; Đầu</a>
+            <a href="?page={{ services.previous_page_number }}">Trước</a>
+        {% endif %}
+
+        <span class="current">
+            Trang {{ services.number }} / {{ services.paginator.num_pages }}
+        </span>
+
+        {% if services.has_next %}
+            <a href="?page={{ services.next_page_number }}">Tiếp</a>
+            <a href="?page={{ services.paginator.num_pages }}">Cuối &raquo;</a>
+        {% endif %}
+    </div>
+    {% else %}
+    <p>Hiện không có sản phẩm nào.</p>
+    {% endif %}
+</section>
+{% endblock %}
+

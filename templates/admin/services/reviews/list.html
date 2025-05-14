@@ -1,0 +1,55 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Đánh giá sản phẩm - {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Đánh giá cho {{ service.name }}</h5>
+        <a href="{% url 'services:admin_service_detail' service.pk %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Quay lại sản phẩm
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Người dùng</th>
+                        <th>Đánh giá</th>
+                        <th>Bình luận</th>
+                        <th>Ngày</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in reviews %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'accounts:admin_user_detail' review.user.pk %}">
+                                {{ review.user.get_full_name }}
+                            </a>
+                        </td>
+                        <td class="text-warning">
+                            {{ review.get_rating_stars }}
+                        </td>
+                        <td>{{ review.comment|truncatechars:50 }}</td>
+                        <td>{{ review.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'services:admin_review_detail' review.pk %}" 
+                               class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">Không tìm thấy đánh giá nào</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

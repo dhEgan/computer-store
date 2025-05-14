@@ -1,0 +1,31 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} Danh mục mẹo{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} Danh mục mẹo</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Tên</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                <div class="text-danger">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Mô tả</label>
+                {{ form.description }}
+            </div>
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Cập nhật{% else %}Thêm{% endif %} Danh mục
+            </button>
+            <a href="{% url 'tips:admin_tip_category_list' %}" class="btn btn-secondary">Hủy</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

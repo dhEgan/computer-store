@@ -1,0 +1,159 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}User Detail - {{ user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <img src="https://ui-avatars.com/api/?name={{ user.get_full_name|urlencode }}&background=random" 
+                     alt="Avatar" class="rounded-circle mb-3" width="120">
+                <h4>{{ user.get_full_name }}</h4>
+                <span class="badge bg-{% if user.is_admin %}danger{% elif user.is_staff_member %}info{% else %}secondary{% endif %} mb-2">
+                    {{ user.get_user_type_display }}
+                </span>
+                <p class="text-muted mb-1">{{ user.email }}</p>
+                <p class="text-muted">{{ user.phone|default:"No phone" }}</p>
+                
+                <div class="d-flex justify-content-center mb-2">
+                    <a href="{% url 'accounts:admin_user_update' user.pk %}" 
+                       class="btn btn-primary me-2">
+                        <i class="bi bi-pencil"></i> Sửa
+                    </a>
+                    <a href="{% url 'accounts:admin_user_delete' user.pk %}" 
+                       class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Xóa
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        {% include 'admin/users/_user_stats.html' %}
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#profile">Hồ sơ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#bookings">Đơn hàng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#loyalty">Tích lũy</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="profile">
+                        <div class="alert alert-secondary mb-4">
+                            <strong>Số đơn hàng hoàn thành:</strong> {{ completed_bookings_count }}
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tên người dùng</label>
+                                        <input type="text" class="form-control" value="{{ user.username }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Vai trò</label>
+                                        <input type="text" class="form-control" 
+                                               value="{{ user.get_user_type_display }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">Vai trò</label>
+        {{ form.user_type }}
+    </div>
+</div>
+                            </div>
+                            
+                            {{ form.as_p }}
+                            
+                            <button type="submit" class="btn btn-primary">Cập nhật hồ sơ</button>
+                        </form>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="bookings">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th>Ngày</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for booking in bookings %}
+                                    <tr>
+                                        <td>{{ booking.service.name }}</td>
+                                        <td>{{ booking.booking_date|date:"M d, Y H:i" }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ booking.get_status_class }}">
+                                                {{ booking.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'bookings:admin_booking_detail' booking.pk %}" 
+                                               class="btn btn-sm btn-primary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">Không tìm thấy đơn hàng nào</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="loyalty">
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">Điểm tích lũy</h5>
+                            <p class="mb-0">
+                                Điểm hiện tại: <strong>{{ points.points|default:0 }}</strong>
+                            </p>
+                        </div>
+                        
+                        <h5 class="mt-4">Phiếu giảm giá</h5>
+                        <div class="list-group">
+                            {% for voucher in user.vouchers.all %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ voucher.code }}</h6>
+                                    <span class="badge bg-{% if voucher.is_used %}secondary{% else %}success{% endif %}">
+                                        {% if voucher.is_used %}Đã sử dụng{% else %}Thao tác{% endif %}
+                                    </span>
+                                </div>
+                                <p class="mb-1">{{ voucher.discount_percent }}% giảm giá</p>
+                                <small class="text-muted">
+                                    Hết hạn: {{ voucher.expires_at|date:"M d, Y" }}
+                                </small>
+                            </div>
+                            {% empty %}
+                            <div class="list-group-item">
+                                Không có phiếu giảm giá nào
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

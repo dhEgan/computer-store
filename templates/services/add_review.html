@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="review-form-section">
+    <div class="container">
+        <h1>Đánh giá sản phẩm: {{ service.name }}</h1>
+        
+        <div class="breadcrumb">
+            <a href="{% url 'services:list' %}">Sản phẩm</a> &raquo;
+            <a href="{{ service.get_absolute_url }}">{{ service.name }}</a> &raquo;
+            <span>Đánh giá</span>
+        </div>
+        
+        <div class="review-form-container">
+            <form method="post" class="review-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Đánh giá của bạn:</label>
+                    <div class="rating-input">
+                        {% for radio in form.rating %}
+                        <div class="rating-option">
+                            {{ radio.tag }}
+                            <label for="{{ radio.id_for_label }}">
+                                {% with stars=radio.choice_value %}
+                                    {% for i in "12345"|make_list %}
+                                        {% if forloop.counter <= stars %}★{% else %}☆{% endif %}
+                                    {% endfor %}
+                                {% endwith %}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if form.rating.errors %}
+                    <div class="error-message">{{ form.rating.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.comment.id_for_label }}">Nhận xét chi tiết:</label>
+                    {{ form.comment }}
+                    {% if form.comment.errors %}
+                    <div class="error-message">{{ form.comment.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-submit">Gửi đánh giá</button>
+                    <a href="{{ service.get_absolute_url }}" class="btn btn-cancel">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

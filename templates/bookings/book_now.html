@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main style="margin-top: -5px; padding: 20px;">
+    <div class="booking-container">
+        
+        <div class="booking-form">
+            <div class="form-header">
+                <h2>Đặt hàng trực tuyến</h2>
+                <img src="{% static 'images/logodientuxanh.png' %}" alt="Logo" class="logo">
+                <p class="instruction">Quý khách vui lòng điền vào phiếu dưới đây</p>
+            </div>
+            
+            <form class="form-booking" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_service">Lựa chọn sản phẩm</label>
+                    {{ form.service }}
+                </div>
+                <div class="form-group">
+                    <label for="id_booking_date">Chọn ngày và giờ</label>
+                    {{ form.booking_date }}
+                </div>
+                <div class="form-group">
+                    <label for="id_notes">Để lại ghi chú</label>
+                    {{ form.notes }}
+                </div>
+                <button type="submit" class="btn">Gửi đặt hàng</button>
+            </form>
+            <h3>XIN QUÝ KHÁCH LƯU Ý</h3>
+            <ul>
+                <li>Giờ mở cửa cuối cùng vào lúc 22h30 tối</li>
+                <li>Hủy đơn trước ít nhất 2 giờ</li>
+                <li>Mang theo thẻ thành viên nếu có</li>
+            </ul>
+            
+             <div class="social-icons">
+                <a href="#"><img src="{% static 'images/facebook-icon.jpg' %}" alt="Facebook"></a>
+                <a href="#"><img src="{% static 'images/zalo-icon.png' %}" alt="Zalo"></a>
+                <a href="#"><img src="{% static 'images/instagram-icon.jpg' %}" alt="Instagram"></a>
+            </div>
+        </div>
+        
+        
+        <div class="booking-info">
+            <div class="form-header">
+                <h2>Đặt hàng trực tiếp</h2>
+                <img src="{% static 'images/logodientuxanh.png' %}" alt="Logo" class="logo">
+                <p class="instruction">Quý khách vui lòng đặt trực tiếp theo thông tin dưới đây</p>
+            </div>
+            
+            <div class="contact-details">
+                
+                <div class="form-group">
+                   
+                    <input type="text" value="SDT: 0702 664 640" readonly placeholder="Điện thoại">
+                </div>
+                <div class="form-group">
+                   
+                    <input type="text" value="Email: info@dientuxanh.com" readonly placeholder="Email">
+                </div>
+                <div class="form-group">
+                    
+                    <input type="text" value="02 Hồ Nghinh, Phước Mỹ, Sơn Trà, tp. Đà Nẵng" readonly placeholder="Địa chỉ">
+                </div>
+            </div>
+            
+            <div class="map-container">
+               
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3977231.4597448385!2d104.208093276093!3d13.224368686122595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314218d63bc3cdd7%3A0x786a3e6fa5fcd7cb!2zU2nDqnUgdGjhu4sgxJBp4buHbiBtw6F5IFhhbmg!5e0!3m2!1svi!2s!4v1746496981750!5m2!1svi!2s" 
+                    width="100%" 
+                    height="250" 
+                    style="border:10px solid #B78E80; border-radius:8px;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+                <h3>XIN QUÝ KHÁCH LƯU Ý</h3>
+            <ul>
+                <li>Giờ mở cửa cuối cùng vào lúc 22h30 tối</li>
+                <li>Hủy đơn trước ít nhất 2 giờ</li>
+                <li>Mang theo thẻ thành viên nếu có</li>
+            </ul>
+            </div>
+            
+            
+            
+            <div class="social-icons">
+                <a href="#"><img src="{% static 'images/facebook-icon.jpg' %}" alt="Facebook"></a>
+                <a href="#"><img src="{% static 'images/zalo-icon.png' %}" alt="Zalo"></a>
+                <a href="#"><img src="{% static 'images/instagram-icon.jpg' %}" alt="Instagram"></a>
+            </div>
+        </div>
+        
+        
+    </div>
+</main>
+
+<style>
+    .booking-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        align-items: start;
+    }
+    
+    .booking-form {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 20px solid #B78E80;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        list-style-type: disc;
+    color: black; 
+    
+    }
+
+    .booking-form h3{
+        margin-top: 47px;
+    }
+    .booking-form ul li::marker {
+    color: white; 
+}
+    
+    .booking-info {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 20px solid #B78E80;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        margin-top: 0rem;
+    }
+
+    .form-booking{box-shadow: none !important; 
+    border: none !important; 
+    outline: none !important; 
+margin-top: -30px;}
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-header h2 {
+        color: #B78E80;
+        margin-bottom: 0.5rem;
+    }
+    
+    .logo {
+        width: 60px;
+        height: 60px;
+        margin: 0.5rem auto;
+        display: block;
+        border-radius: 50%; 
+    object-fit: cover;
+    }
+    
+    .instruction {
+        color: #000000;
+        font-style: italic;
+        margin-bottom: 0;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+        
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #000000;
+        text-align: center;
+    }
+    
+    .form-group select,
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.8rem;
+        resize: none;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        font-size: 1rem;
+        background: #B78E80;
+        color: white;
+        
+    }
+
+    ::placeholder {
+    color: white;
+    opacity: 1; 
+}
+
+
+textarea::placeholder,
+input::placeholder {
+    color: white;
+    opacity: 1;
+}
+
+    
+    .btn {
+        background-color: #B78E80;
+        color: white;
+        border: none;
+        padding: 0.8rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        margin-top: auto;
+    }
+    
+    .contact-details {
+        margin-bottom: 1.5rem;
+    }
+    
+    .map-container {
+        margin-bottom: 1.5rem;
+        margin-top: -70px;
+    }
+    
+    
+    
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+    
+    .social-icons img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+    object-fit: cover;
+    }
+    
+    .notes {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 2px solid #B78E80;
+        margin-top: 1rem;
+    }
+    
+    .left-notes {
+        grid-column: 1;
+    }
+    
+    .right-notes {
+        grid-column: 2;
+    }
+    
+    .notes h3 {
+        color: #B78E80;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .notes ul {
+        list-style-type: none;
+        padding-left: 1.2rem;
+    }
+    
+    .notes li {
+        position: relative;
+        margin-bottom: 0.5rem;
+    }
+    
+    .notes li:before {
+        content: "•";
+        color: #B78E80;
+        position: absolute;
+        left: 0;
+    }
+    
+    @media (max-width: 768px) {
+        .booking-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .left-notes, .right-notes {
+            grid-column: 1;
+        }
+    }
+</style>
+{% endblock %}
