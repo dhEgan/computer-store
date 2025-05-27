@@ -17,30 +17,63 @@ def admin_required(view_func):
             return render(request, 'admin/access_denied.html', status=403)
         return view_func(request, *args, **kwargs)
     return wrapper
+from django.http import JsonResponse
+import logging
 
+logger = logging.getLogger(__name__)
 @login_required
 def book_now(request):
     service_id = request.GET.get('service', None)
-    initial_service = get_object_or_404(Service, pk=service_id) if service_id else None
+    try:
+        initial_service = get_object_or_404(Service, pk=service_id) if service_id else None
+    except Exception as e:
+        logger.error(f"Error fetching service {service_id}: {str(e)}")
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': f'Invalid service ID: {str(e)}'}, status=400)
+        messages.error(request, 'Dịch vụ không hợp lệ.')
+        return render(request, 'bookings/book_now.html', {'form': BookingForm(user=request.user)})
     
-    if request.method == 'POST':
-        form = BookingForm(request.POST, user=request.user)
-        if form.is_valid():
-            booking = form.save(commit=False)
-            booking.customer = request.user
-            booking.save()
-            messages.success(request, 'Đặt lịch thành công! Chúng tôi sẽ liên hệ với bạn sớm.')
-            return redirect('bookings:booking_detail', pk=booking.pk)
-    else:
-        form = BookingForm(user=request.user, initial={'service': initial_service})
-    
-    services = Service.objects.all()
-    return render(request, 'bookings/book_now.html', {
-        'form': form,
-        'services': services,
-        'selected_service': initial_service
-    })
-
+    try:
+        if request.method == 'POST':
+            logger.debug(f"POST data: {request.POST}")
+            form = BookingForm(request.POST, user=request.user)
+            if form.is_valid():
+                booking = form.save(commit=False)
+                booking.customer = request.user
+                booking.save()
+                logger.info(f"Booking created: ID {booking.pk}")
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'booking_id': booking.pk})
+                messages.success(request, 'Đặt lịch thành công! Chúng tôi sẽ liên hệ với bạn sớm.')
+                return redirect('bookings:booking_detail', pk=booking.pk)
+            else:
+                logger.warning(f"Form errors: {form.errors}")
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': form.errors.as_text()}, status=400)
+                messages.error(request, 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.')
+                return render(request, 'bookings/book_now.html', {
+                    'form': form,
+                    'services': Service.objects.all(),
+                    'selected_service': initial_service
+                })
+        else:
+            form = BookingForm(user=request.user, initial={'service': initial_service})
+        
+        services = Service.objects.all()
+        return render(request, 'bookings/book_now.html', {
+            'form': form,
+            'services': services,
+            'selected_service': initial_service
+        })
+    except Exception as e:
+        logger.error(f"Server error in book_now: {str(e)}")
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': f'Server error: {str(e)}'}, status=500)
+        messages.error(request, 'Có lỗi xảy ra. Vui lòng thử lại.')
+        return render(request, 'bookings/book_now.html', {
+            'form': BookingForm(user=request.user),
+            'services': Service.objects.all()
+        })
 @login_required
 def booking_detail(request, pk):
     booking = get_object_or_404(Booking, pk=pk)

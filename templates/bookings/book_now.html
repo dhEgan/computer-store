@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% block title %}Đặt hàng{% endblock %}
 {% block content %}
 <main style="margin-top: -5px; padding: 20px;">
     <div class="booking-container">
@@ -12,8 +12,9 @@
                 <p class="instruction">Quý khách vui lòng điền vào phiếu dưới đây</p>
             </div>
             
-            <form class="form-booking" method="post">
+            <form class="form-booking" id="booking-form" method="post">
                 {% csrf_token %}
+                <input type="hidden" id="booking-id" name="booking_id" value="">
                 <div class="form-group">
                     <label for="id_service">Lựa chọn sản phẩm</label>
                     {{ form.service }}
@@ -26,7 +27,7 @@
                     <label for="id_notes">Để lại ghi chú</label>
                     {{ form.notes }}
                 </div>
-                <button type="submit" class="btn">Gửi đặt hàng</button>
+                <button type="button" class="btn" onclick="submitBookingForm()">Gửi đặt hàng</button>
             </form>
             <h3>XIN QUÝ KHÁCH LƯU Ý</h3>
             <ul>
@@ -35,13 +36,12 @@
                 <li>Mang theo thẻ thành viên nếu có</li>
             </ul>
             
-             <div class="social-icons">
+            <div class="social-icons">
                 <a href="#"><img src="{% static 'images/facebook-icon.jpg' %}" alt="Facebook"></a>
                 <a href="#"><img src="{% static 'images/zalo-icon.png' %}" alt="Zalo"></a>
                 <a href="#"><img src="{% static 'images/instagram-icon.jpg' %}" alt="Instagram"></a>
             </div>
         </div>
-        
         
         <div class="booking-info">
             <div class="form-header">
@@ -51,25 +51,20 @@
             </div>
             
             <div class="contact-details">
-                
                 <div class="form-group">
-                   
                     <input type="text" value="SDT: 0702 664 640" readonly placeholder="Điện thoại">
                 </div>
                 <div class="form-group">
-                   
                     <input type="text" value="Email: info@dientuxanh.com" readonly placeholder="Email">
                 </div>
                 <div class="form-group">
-                    
                     <input type="text" value="02 Hồ Nghinh, Phước Mỹ, Sơn Trà, tp. Đà Nẵng" readonly placeholder="Địa chỉ">
                 </div>
             </div>
             
             <div class="map-container">
-               
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3977231.4597448385!2d104.208093276093!3d13.224368686122595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314218d63bc3cdd7%3A0x786a3e6fa5fcd7cb!2zU2nDqnUgdGjhu4sgxJBp4buHbiBtw6F5IFhhbmg!5e0!3m2!1svi!2s!4v1746496981750!5m2!1svi!2s" 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3977231.4597448385!2d104.208093276093!3d13.224368686122595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314218d63bc3cdd7%3A0x786a3e6fa5fcd7cb!2zU2nDqnUgdJjhu4sgxJBp4buHbiBtw6F5IFhhbmg!5e0!3m2!1svi!2s!4v1746496981750!5m2!1svi!2s" 
                     width="100%" 
                     height="250" 
                     style="border:10px solid #B78E80; border-radius:8px;" 
@@ -77,14 +72,12 @@
                     loading="lazy">
                 </iframe>
                 <h3>XIN QUÝ KHÁCH LƯU Ý</h3>
-            <ul>
-                <li>Giờ mở cửa cuối cùng vào lúc 22h30 tối</li>
-                <li>Hủy đơn trước ít nhất 2 giờ</li>
-                <li>Mang theo thẻ thành viên nếu có</li>
-            </ul>
+                <ul>
+                    <li>Giờ mở cửa cuối cùng vào lúc 22h30 tối</li>
+                    <li>Hủy đơn trước ít nhất 2 giờ</li>
+                    <li>Mang theo thẻ thành viên nếu có</li>
+                </ul>
             </div>
-            
-            
             
             <div class="social-icons">
                 <a href="#"><img src="{% static 'images/facebook-icon.jpg' %}" alt="Facebook"></a>
@@ -92,8 +85,55 @@
                 <a href="#"><img src="{% static 'images/instagram-icon.jpg' %}" alt="Instagram"></a>
             </div>
         </div>
-        
-        
+    </div>
+
+    
+    <div id="cod-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cod-modal')">&times;</span>
+            <div class="form-header">
+                <h2>Thanh toán COD</h2>
+                <p class="instruction">Vui lòng nhập địa chỉ nhận hàng</p>
+            </div>
+            <div class="form-group">
+                <label for="cod-address">Địa chỉ nhận hàng</label>
+                <input type="text" id="cod-address" placeholder="Nhập địa chỉ giao hàng">
+            </div>
+            <button type="button" class="btn" onclick="processPayment('cod')">Thanh toán</button>
+        </div>
+    </div>
+
+    
+    <div id="vnpay-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('vnpay-modal')">&times;</span>
+            <div class="form-header">
+                <h2>Thanh toán qua VNPAY</h2>
+                <p class="instruction">Vui lòng nhập thông tin thẻ</p>
+            </div>
+            <div class="form-group">
+                <label for="card-number">Số thẻ</label>
+                <input type="text" id="card-number" placeholder="Nhập số thẻ">
+                <label for="card-name">Tên trên thẻ</label>
+                <input type="text" id="card-name" placeholder="Nhập tên trên thẻ">
+                <label for="expiry-date">Ngày hết hạn</label>
+                <input type="text" id="expiry-date" placeholder="MM/YY">
+                <label for="cvv">Mã CVV</label>
+                <input type="text" id="cvv" placeholder="CVV">
+            </div>
+            <button type="button" class="btn" onclick="processPayment('vnpay')">Thanh toán</button>
+        </div>
+    </div>
+
+
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <div class="form-header">
+                <h2>Đặt hàng thành công!</h2>
+                <p class="instruction">Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ liên hệ sớm!</p>
+            </div>
+            <button type="button" class="btn" onclick="completePayment()">OK</button>
+        </div>
     </div>
 </main>
 
@@ -118,16 +158,15 @@
         flex-direction: column;
         height: 100%;
         list-style-type: disc;
-    color: black; 
-    
+        color: black; 
     }
 
-    .booking-form h3{
+    .booking-form h3 {
         margin-top: 47px;
     }
     .booking-form ul li::marker {
-    color: white; 
-}
+        color: white; 
+    }
     
     .booking-info {
         background: #fff;
@@ -141,10 +180,12 @@
         margin-top: 0rem;
     }
 
-    .form-booking{box-shadow: none !important; 
-    border: none !important; 
-    outline: none !important; 
-margin-top: -30px;}
+    .form-booking {
+        box-shadow: none !important; 
+        border: none !important; 
+        outline: none !important;
+        margin-top: -30px;
+    }
 
     .form-header {
         text-align: center;
@@ -162,7 +203,7 @@ margin-top: -30px;}
         margin: 0.5rem auto;
         display: block;
         border-radius: 50%; 
-    object-fit: cover;
+        object-fit: cover;
     }
     
     .instruction {
@@ -173,7 +214,6 @@ margin-top: -30px;}
     
     .form-group {
         margin-bottom: 1.5rem;
-        
     }
     
     .form-group label {
@@ -194,21 +234,18 @@ margin-top: -30px;}
         font-size: 1rem;
         background: #B78E80;
         color: white;
-        
     }
 
     ::placeholder {
-    color: white;
-    opacity: 1; 
-}
+        color: white;
+        opacity: 1; 
+    }
 
-
-textarea::placeholder,
-input::placeholder {
-    color: white;
-    opacity: 1;
-}
-
+    textarea::placeholder,
+    input::placeholder {
+        color: white;
+        opacity: 1;
+    }
     
     .btn {
         background-color: #B78E80;
@@ -231,8 +268,6 @@ input::placeholder {
         margin-top: -70px;
     }
     
-    
-    
     .social-icons {
         display: flex;
         justify-content: center;
@@ -245,7 +280,7 @@ input::placeholder {
         width: 32px;
         height: 32px;
         border-radius: 50%;
-    object-fit: cover;
+        object-fit: cover;
     }
     
     .notes {
@@ -297,5 +332,205 @@ input::placeholder {
             grid-column: 1;
         }
     }
+
+    
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        overflow: auto;
+    }
+
+    .modal-content {
+        background: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border: 10px solid #B78E80;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #B78E80;
+        text-decoration: none;
+    }
+
+    .modal .form-header h2 {
+        margin-top: 0;
+    }
+
+    .modal .btn {
+        margin-top: 1rem;
+    }
 </style>
+
+<script>
+    function submitBookingForm() {
+        console.log("Submit booking button clicked");
+        const form = document.getElementById('booking-form');
+        const service = document.getElementById('id_service').value;
+        const bookingDate = document.getElementById('id_booking_date').value;
+
+        
+        if (!service) {
+            alert('Vui lòng chọn sản phẩm.');
+            return;
+        }
+        if (!bookingDate) {
+            alert('Vui lòng chọn ngày và giờ.');
+            return;
+        }
+        const now = new Date();
+        const selectedDate = new Date(bookingDate);
+        if (selectedDate < now) {
+            alert('Thời gian đặt lịch không thể trong quá khứ!');
+            return;
+        }
+
+        const formData = new FormData(form);
+        console.log("Form data:", Object.fromEntries(formData));
+        fetch("{% url 'bookings:book_now' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            console.log("Response status:", response.status);
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error("Error response:", text);
+                    throw new Error(`Lỗi server (mã ${response.status}). Vui lòng thử lại hoặc liên hệ hỗ trợ.`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Booking response:", data);
+            if (data.success && data.booking_id) {
+                document.getElementById('booking-id').value = data.booking_id;
+        
+                showPaymentMethodModal();
+            } else {
+                alert('Có lỗi xảy ra khi đặt hàng: ' + (data.error || 'Vui lòng thử lại.'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi đặt hàng: ' + error.message);
+        });
+    }
+
+    function showPaymentMethodModal() {
+        
+        const modal = document.createElement('div');
+        modal.id = 'payment-method-modal';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('payment-method-modal')">&times;</span>
+                <div class="form-header">
+                    <h2>Chọn phương thức thanh toán</h2>
+                    <p class="instruction">Vui lòng chọn phương thức thanh toán</p>
+                </div>
+                <div class="form-group">
+                    <label for="payment-method">Phương thức thanh toán</label>
+                    <select id="payment-method">
+                        <option value="cod">Thanh toán khi nhận hàng (COD)</option>
+                        <option value="vnpay">Thanh toán qua VNPAY</option>
+                    </select>
+                </div>
+                <button type="button" class="btn" onclick="proceedToPayment()">Tiếp tục</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.style.display = 'block';
+    }
+
+    function proceedToPayment() {
+        const paymentMethod = document.getElementById('payment-method').value;
+        closeModal('payment-method-modal');
+        if (paymentMethod === 'cod') {
+            showModal('cod-modal');
+        } else if (paymentMethod === 'vnpay') {
+            showModal('vnpay-modal');
+        }
+    }
+
+    function processPayment(method) {
+        console.log("Payment button clicked for method:", method);
+        const bookingId = document.getElementById('booking-id').value;
+
+        if (!bookingId) {
+            alert('Không tìm thấy ID đặt hàng. Vui lòng thử lại.');
+            return;
+        }
+
+        if (method === 'cod') {
+            const address = document.getElementById('cod-address')?.value;
+            if (!address) {
+                alert('Vui lòng nhập địa chỉ giao hàng.');
+                return;
+            }
+        }
+
+        closeModal(method + '-modal');
+        showModal('success-modal');
+    }
+
+    function completePayment() {
+        const bookingId = document.getElementById('booking-id').value;
+        console.log("Payment completed for booking ID:", bookingId);
+        closeModal('success-modal');
+        window.location.href = `/bookings/${bookingId}/`;
+    }
+
+    function showModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+            if (modalId === 'payment-method-modal') {
+                modal.remove(); 
+            }
+        }
+    }
+
+    
+    window.onclick = function(event) {
+        const modals = document.getElementsByClassName('modal');
+        for (let modal of modals) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                if (modal.id === 'payment-method-modal') {
+                    modal.remove();
+                }
+            }
+        }
+    };
+</script>
 {% endblock %}

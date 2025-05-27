@@ -1,11 +1,11 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} Danh mục sản phẩm{% endblock %}
+{% block title %}{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} danh mục sản phẩm{% endblock %}
 
 {% block content %}
 <div class="card">
     <div class="card-header">
-        <h5 class="mb-0">{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} Danh mục sản phẩm</h5>
+        <h5 class="mb-0">{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} danh mục sản phẩm</h5>
     </div>
     <div class="card-body">
         <form method="post">
