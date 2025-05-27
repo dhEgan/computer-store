@@ -22,7 +22,13 @@
         <button class="suggestion-btn" onclick="sendSuggestion('Tôi có thể đổi trả sản phẩm không?')">Tôi có thể đổi trả sản phẩm không?</button>
         <button class="suggestion-btn" onclick="sendSuggestion('Liên hệ hỗ trợ qua đâu?')">Liên hệ hỗ trợ qua đâu?</button>
     </div>
+console.log('User sent suggestion:', question);
+console.log('Matched key:', matchedKey);
+console.log('Response text:', responseText);
 
+console.log('User sent message:', message);
+console.log('Matched key:', matchedKey);
+console.log('Response text:', responseText);
     <div class="chat-footer">
         <input type="text" id="user-input" placeholder="Nhập tin nhắn..." onkeypress="if(event.key === 'Enter') sendUserMessage()">
         <button onclick="sendUserMessage()">Gửi</button>
