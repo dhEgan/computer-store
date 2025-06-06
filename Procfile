@@ -1,1 +1,1 @@
-web: gunicorn computer_store.wsgi
+web: gunicorn computer_store.wsgi:application --bind 0.0.0.0:$PORT
