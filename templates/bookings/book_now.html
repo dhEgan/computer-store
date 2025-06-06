@@ -52,7 +52,7 @@
             
             <div class="contact-details">
                 <div class="form-group">
-                    <input type="text" value="SDT: 0702 664 640" readonly placeholder="Điện thoại">
+                    <input type="text" value="SDT: 0837199654" readonly placeholder="Điện thoại">
                 </div>
                 <div class="form-group">
                     <input type="text" value="Email: info@dientuxanh.com" readonly placeholder="Email">
@@ -99,6 +99,7 @@
                 <label for="cod-address">Địa chỉ nhận hàng</label>
                 <input type="text" id="cod-address" placeholder="Nhập địa chỉ giao hàng">
             </div>
+            <button type="button" class="btn" onclick="closeModal('cod-modal')">Đóng</button>
             <button type="button" class="btn" onclick="processPayment('cod')">Thanh toán</button>
         </div>
     </div>
@@ -108,19 +109,19 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('vnpay-modal')">&times;</span>
             <div class="form-header">
-                <h2>Thanh toán qua VNPAY</h2>
-                <p class="instruction">Vui lòng nhập thông tin thẻ</p>
+                <h2>Thanh toán qua QR PAY</h2>
+                <p class="instruction">Vui lòng quét QR hoặc nhập tài khoản ngân hàng</p>
             </div>
             <div class="form-group">
-                <label for="card-number">Số thẻ</label>
-                <input type="text" id="card-number" placeholder="Nhập số thẻ">
-                <label for="card-name">Tên trên thẻ</label>
-                <input type="text" id="card-name" placeholder="Nhập tên trên thẻ">
-                <label for="expiry-date">Ngày hết hạn</label>
-                <input type="text" id="expiry-date" placeholder="MM/YY">
-                <label for="cvv">Mã CVV</label>
-                <input type="text" id="cvv" placeholder="CVV">
+                <div style="text-align: center;">
+                    <p>Mã QR:</p>
+                    <img src="{% static 'images/QR.png' %}" alt="QR Code" width="200">
+                </div>
+                <label for="card-name">Tên tài khoản: Quản Văn Dũng</label>
+                <label for="card-name">Số tài khoản: 29100388888</label>
+                <label for="card-name">Ngân hàng: Techcombank</label>
             </div>
+            <button type="button" class="btn" onclick="closeModal('vnpay-modal')">Đóng</button>
             <button type="button" class="btn" onclick="processPayment('vnpay')">Thanh toán</button>
         </div>
     </div>
@@ -455,7 +456,7 @@
                     <label for="payment-method">Phương thức thanh toán</label>
                     <select id="payment-method">
                         <option value="cod">Thanh toán khi nhận hàng (COD)</option>
-                        <option value="vnpay">Thanh toán qua VNPAY</option>
+                        <option value="vnpay">Thanh toán qua QR Pay</option>
                     </select>
                 </div>
                 <button type="button" class="btn" onclick="proceedToPayment()">Tiếp tục</button>

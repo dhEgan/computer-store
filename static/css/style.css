@@ -233,9 +233,17 @@ main {
   }
   .heart-image {
     width: 150px;
-    opacity: 0.2;
-    filter: blur(2px);
+    opacity: 1;
+    border-radius: 50%; /* Bo tròn ảnh */
+    filter: brightness(1.5) blur(0.3px);
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 8px rgba(183, 142, 128, 0.3); /* ánh sáng nhẹ */
   }
+  .heart-image:hover {
+    filter: brightness(2) blur(0px); /* sáng rõ hơn khi hover */
+    transform: scale(1.05); /* phóng to nhẹ */
+    box-shadow: 0 0 16px rgba(183, 142, 128, 0.6); /* ánh sáng mạnh hơn */
+    }
   .text-over-heart {
     position: absolute;
     top: 50%;
@@ -244,7 +252,6 @@ main {
     color: #ff6b81;
     font-size: 1.5rem;
     font-weight: bold;
-    
   }
   
 

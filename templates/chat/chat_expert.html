@@ -22,13 +22,6 @@
         <button class="suggestion-btn" onclick="sendSuggestion('Tôi có thể đổi trả sản phẩm không?')">Tôi có thể đổi trả sản phẩm không?</button>
         <button class="suggestion-btn" onclick="sendSuggestion('Liên hệ hỗ trợ qua đâu?')">Liên hệ hỗ trợ qua đâu?</button>
     </div>
-console.log('User sent suggestion:', question);
-console.log('Matched key:', matchedKey);
-console.log('Response text:', responseText);
-
-console.log('User sent message:', message);
-console.log('Matched key:', matchedKey);
-console.log('Response text:', responseText);
     <div class="chat-footer">
         <input type="text" id="user-input" placeholder="Nhập tin nhắn..." onkeypress="if(event.key === 'Enter') sendUserMessage()">
         <button onclick="sendUserMessage()">Gửi</button>
@@ -193,7 +186,6 @@ console.log('Response text:', responseText);
 </style>
 
 <script>
-    
     const responses = {
         "đặt hàng": {
             keywords: ["đặt", "hàng"],
@@ -219,6 +211,17 @@ console.log('Response text:', responseText);
             keywords: ["giao", "hàng"],
             suggestion: "Sản phẩm có giao hàng không?",
             response: "Chúng tôi hỗ trợ giao hàng toàn quốc. Phí giao hàng tùy thuộc vào khu vực, vui lòng liên hệ để biết chi tiết."
+        },
+        "khuyến mãi": {
+            keywords: ["khuyến", "mãi", "giảm", "giá", "tích", "điểm"],
+            suggestion: "Hiện tại có khuyến mãi gì không?",
+            response: `Hiện tại chúng tôi đang triển khai chương trình **tích điểm đổi quà** dành cho khách hàng thân thiết:\n
+        - ✅ **10 điểm**: Tặng bàn phím hoặc balo tiện dụng  
+        - ✅ **20 điểm**: Tặng bàn máy tính  
+        - ✅ **30 điểm**: Tặng mô hình nhân vật cao cấp  
+        - ✅ **50 điểm**: Tặng màn hình máy tính 27 inch\n
+        Mỗi lần mua hàng bạn sẽ được cộng **10 điểm**, và chúng tôi sẽ cập nhật điểm tích lũy trên hệ thống.  
+        Hãy theo dõi fanpage và website để không bỏ lỡ các chương trình ưu đãi hấp dẫn khác!`
         }
     };
 
@@ -248,6 +251,9 @@ console.log('Response text:', responseText);
         if (matchedKey) {
             answeredQuestions.push(matchedKey);
         }
+        console.log('User sent suggestion:', question);
+        console.log('Matched key:', matchedKey);
+        console.log('Response text:', responseText);
 
      
         setTimeout(() => {
@@ -281,7 +287,7 @@ console.log('Response text:', responseText);
        
         for (const key in responses) {
             const { keywords } = responses[key];
-            if (keywords.every(kw => message.includes(kw)) && !answeredQuestions.includes(key)) {
+            if (keywords.some(kw => message.includes(kw)) && !answeredQuestions.includes(key)) {
                 matchedKey = key;
                 responseText = responses[key].response;
                 break;
