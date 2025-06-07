@@ -31,6 +31,7 @@
                 {% csrf_token %}
                 <div class="profile-table">
                     {% for field in form %}
+                    {% if field.name != 'user_type' %}
                     <div class="table-row">
                         <div class="table-cell label-cell">{{ field.label }}</div>
                         <div class="table-cell input-cell">
@@ -42,6 +43,7 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% endif %}
                     {% endfor %}
                 </div>
                 <button type="submit" class="btn" style="display: block; width: 200px; margin: 1.5rem auto 0; padding: 0.8rem; background-color: #B78E80; color: white; border: none; border-radius: 4px;">CẬP NHẬT</button>
