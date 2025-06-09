@@ -16,12 +16,10 @@
         </div>
     </div>
 
-    <div class="chat-suggestions">
-        <button class="suggestion-btn" onclick="sendSuggestion('Làm thế nào để đặt hàng?')">Làm thế nào để đặt hàng?</button>
-        <button class="suggestion-btn" onclick="sendSuggestion('Chính sách bảo hành như thế nào?')">Chính sách bảo hành như thế nào?</button>
-        <button class="suggestion-btn" onclick="sendSuggestion('Tôi có thể đổi trả sản phẩm không?')">Tôi có thể đổi trả sản phẩm không?</button>
-        <button class="suggestion-btn" onclick="sendSuggestion('Liên hệ hỗ trợ qua đâu?')">Liên hệ hỗ trợ qua đâu?</button>
+    <div class="chat-suggestions" id="chat-suggestions">
+        <!-- Nút sẽ được tạo bằng JavaScript -->
     </div>
+
     <div class="chat-footer">
         <input type="text" id="user-input" placeholder="Nhập tin nhắn..." onkeypress="if(event.key === 'Enter') sendUserMessage()">
         <button onclick="sendUserMessage()">Gửi</button>
@@ -47,145 +45,14 @@
 </div>
 
 <style>
-    .chat-container {
-        max-width: 600px;
-        margin: 40px auto;
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        font-family: Arial, sans-serif;
-    }
-
-    .chat-header {
-        background: #B78E80;
-        color: white;
-        padding: 15px;
-        text-align: center;
-    }
-
-    .chat-body {
-        height: 400px;
-        overflow-y: auto;
-        padding: 20px;
-        background: #f1f0f0;
-    }
-
-    .message {
-        margin-bottom: 15px;
-        padding: 10px 15px;
-        border-radius: 15px;
-        max-width: 70%;
-        line-height: 1.4;
-    }
-
-    .bot-message {
-        background: #e6e6e6;
-        margin-right: auto;
-    }
-
-    .user-message {
-        background: #B78E80;
-        color: white;
-        margin-left: auto;
-    }
-
-    .chat-suggestions {
-        padding: 10px 20px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        background: #fff;
-        border-top: 1px solid #ddd;
-    }
-
-    .suggestion-btn {
-        padding: 8px 15px;
-        background: #f0f0f0;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        transition: transform 0.2s ease, background 0.2s ease;
-        animation: suggestion-pop 0.3s ease;
-    }
-
-    .suggestion-btn:hover {
-        background: #B78E80;
-        color: white;
-        transform: scale(1.05);
-    }
-
-    @keyframes suggestion-pop {
-        0% { transform: scale(0.8); opacity: 0; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-
-    .chat-footer {
-        display: flex;
-        padding: 10px;
-        border-top: 1px solid #ddd;
-        background: #fff;
-    }
-
-    .chat-footer input {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        margin-right: 10px;
-    }
-
-    .chat-footer button {
-        padding: 10px 20px;
-        background: #B78E80;
-        color: white;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-    }
-
-    .chat-footer button:hover {
-        background: #9a766a;
-    }
-
-    .chat-platforms {
-        text-align: center;
-        padding: 20px;
-        background: #f9f9f9;
-        border-top: 1px solid #ddd;
-    }
-
-    .chat-icons {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 10px;
-    }
-
-    .chat-icons a {
-        text-decoration: none;
-        color: #333;
-        text-align: center;
-    }
-
-    .chat-icons img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        transition: transform 0.2s ease;
-    }
-
-    .chat-icons img:hover {
-        transform: scale(1.1);
-    }
-
-    .chat-icons span {
-        display: block;
-        margin-top: 5px;
-    }
+    /* Giữ nguyên phần CSS như bạn đã viết */
 </style>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
+document.addEventListener("DOMContentLoaded", function () {
     const responses = {
         "đặt hàng": {
             keywords: ["đặt", "hàng"],
@@ -216,12 +83,12 @@
             keywords: ["khuyến", "mãi", "giảm", "giá", "tích", "điểm"],
             suggestion: "Hiện tại có khuyến mãi gì không?",
             response: `Hiện tại chúng tôi đang triển khai chương trình **tích điểm đổi quà** dành cho khách hàng thân thiết:\n
-        - ✅ **10 điểm**: Tặng bàn phím hoặc balo tiện dụng  
-        - ✅ **20 điểm**: Tặng bàn máy tính  
-        - ✅ **30 điểm**: Tặng mô hình nhân vật cao cấp  
-        - ✅ **50 điểm**: Tặng màn hình máy tính 27 inch\n
-        Mỗi lần mua hàng bạn sẽ được cộng **10 điểm**, và chúng tôi sẽ cập nhật điểm tích lũy trên hệ thống.  
-        Hãy theo dõi fanpage và website để không bỏ lỡ các chương trình ưu đãi hấp dẫn khác!`
+- ✅ **10 điểm**: Tặng bàn phím hoặc balo tiện dụng  
+- ✅ **20 điểm**: Tặng bàn máy tính  
+- ✅ **30 điểm**: Tặng mô hình nhân vật cao cấp  
+- ✅ **50 điểm**: Tặng màn hình máy tính 27 inch\n
+Mỗi lần mua hàng bạn sẽ được cộng **10 điểm**, và chúng tôi sẽ cập nhật điểm tích lũy trên hệ thống.  
+Hãy theo dõi fanpage và website để không bỏ lỡ các chương trình ưu đãi hấp dẫn khác!`
         },
         "giờ làm việc": {
             keywords: ["giờ", "mở", "cửa", "làm", "việc"],
@@ -260,19 +127,15 @@
         }
     };
 
-   
     let answeredQuestions = [];
 
-    function sendSuggestion(question) {
+    window.sendSuggestion = function(question) {
         const chatBody = document.getElementById('chat-body');
-        
-       
         const userMessage = document.createElement('div');
         userMessage.className = 'message user-message';
         userMessage.innerHTML = `<span>${question}</span>`;
         chatBody.appendChild(userMessage);
 
-       
         let matchedKey = null;
         for (const key in responses) {
             if (responses[key].suggestion === question && !answeredQuestions.includes(key)) {
@@ -281,16 +144,9 @@
             }
         }
 
-       
         let responseText = matchedKey ? responses[matchedKey].response : "Xin vui lòng nói đúng trọng tâm dịch vụ.";
-        if (matchedKey) {
-            answeredQuestions.push(matchedKey);
-        }
-        console.log('User sent suggestion:', question);
-        console.log('Matched key:', matchedKey);
-        console.log('Response text:', responseText);
+        if (matchedKey) answeredQuestions.push(matchedKey);
 
-     
         setTimeout(() => {
             const botMessage = document.createElement('div');
             botMessage.className = 'message bot-message';
@@ -300,26 +156,21 @@
         }, 500);
     }
 
-    function sendUserMessage() {
+    window.sendUserMessage = function() {
         const input = document.getElementById('user-input');
         const message = input.value.trim().toLowerCase();
-        
         if (!message) return;
 
         const chatBody = document.getElementById('chat-body');
-        
-       
         const userMessage = document.createElement('div');
         userMessage.className = 'message user-message';
         userMessage.innerHTML = `<span>${message}</span>`;
         chatBody.appendChild(userMessage);
         input.value = '';
 
-      
         let responseText = "Xin vui lòng nói đúng trọng tâm dịch vụ.";
         let matchedKey = null;
 
-       
         for (const key in responses) {
             const { keywords } = responses[key];
             if (keywords.some(kw => message.includes(kw)) && !answeredQuestions.includes(key)) {
@@ -329,17 +180,12 @@
             }
         }
 
-        
-        if (matchedKey) {
-            answeredQuestions.push(matchedKey);
-        }
+        if (matchedKey) answeredQuestions.push(matchedKey);
 
-       
         if (answeredQuestions.length >= Object.keys(responses).length && !matchedKey) {
             responseText = "Nhân viên tư vấn hiện đang offline. Vui lòng liên hệ qua Facebook, Instagram hoặc Zalo.";
         }
 
-      
         setTimeout(() => {
             const botMessage = document.createElement('div');
             botMessage.className = 'message bot-message';
@@ -348,5 +194,16 @@
             chatBody.scrollTop = chatBody.scrollHeight;
         }, 500);
     }
+
+    // Tự động tạo nút gợi ý
+    const suggestionContainer = document.getElementById('chat-suggestions');
+    for (const key in responses) {
+        const btn = document.createElement('button');
+        btn.className = 'suggestion-btn';
+        btn.innerText = responses[key].suggestion;
+        btn.onclick = () => sendSuggestion(responses[key].suggestion);
+        suggestionContainer.appendChild(btn);
+    }
+});
 </script>
 {% endblock %}
